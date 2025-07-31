@@ -515,7 +515,7 @@
         .slides-section {
             flex: 1;
             overflow-y: auto;
-            max-height: 1600px;
+            max-height: 2400px;
             position: relative;
             background: linear-gradient(180deg, var(--gray-50) 0%, var(--white) 100%);
             border-radius: var(--radius-lg);
@@ -554,7 +554,7 @@
 
         /* Custom scrollbar for slides section */
         .slides-section::-webkit-scrollbar {
-            width: 8px;
+            width: 12px;
         }
 
         .slides-section::-webkit-scrollbar-track {
@@ -564,12 +564,14 @@
 
         .slides-section::-webkit-scrollbar-thumb {
             background: linear-gradient(180deg, var(--primary-color), var(--primary-light));
-            border-radius: 4px;
+            border-radius: 6px;
             transition: all 0.3s ease;
+            border: 1px solid var(--gray-200);
         }
 
         .slides-section::-webkit-scrollbar-thumb:hover {
             background: linear-gradient(180deg, var(--primary-dark), var(--primary-color));
+            transform: scale(1.1);
         }
 
         /* Slide navigation controls */
@@ -2477,9 +2479,9 @@
                             result = await enhanceSlideClientSide(slide.title, slide.content);
                         } else {
                             result = await callBackendAPI('enhance-slide', {
-                                title: slide.title,
-                                content: slide.content
-                            });
+                            title: slide.title,
+                            content: slide.content
+                        });
                         }
                         
                         if (result && result.content && result.content !== slide.content) {
@@ -2522,9 +2524,9 @@
                     if (FALLBACK_MODE) {
                         showNotification('info', 'Client Mode', 
                             'Using client-side enhancement mode. Some slides may not have been enhanced due to content constraints.');
-                    } else {
-                        showNotification('error', 'Enhancement Failed', 
-                            'Unable to enhance any slides. Please check your connection and try again.');
+                } else {
+                    showNotification('error', 'Enhancement Failed', 
+                        'Unable to enhance any slides. Please check your connection and try again.');
                     }
                 }
                 
@@ -2613,9 +2615,9 @@
                     result = await enhanceSlideClientSide(currentSlide.title, currentSlide.content);
                 } else {
                     result = await callBackendAPI('enhance-slide', {
-                        title: currentSlide.title,
-                        content: currentSlide.content
-                    });
+                    title: currentSlide.title,
+                    content: currentSlide.content
+                });
                 }
                 
                 hideLoading();
@@ -2671,9 +2673,9 @@
                     if (FALLBACK_MODE) {
                         showNotification('info', 'Client Enhancement', 
                             'Client-side enhancement completed. Content may already be optimized.');
-                    } else {
-                        showNotification('warning', 'Enhancement Failed', 
-                            'AI enhancement service is currently unavailable. Please try again later.');
+                } else {
+                    showNotification('warning', 'Enhancement Failed', 
+                        'AI enhancement service is currently unavailable. Please try again later.');
                     }
                 }
                 
