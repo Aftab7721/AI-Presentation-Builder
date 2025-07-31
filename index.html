@@ -498,9 +498,31 @@
             box-shadow: var(--shadow-lg);
             padding: var(--spacing-6);
             overflow-y: auto;
-            max-height: calc(100vh - 200px);
+            height: calc(100vh - 200px);
             display: flex;
             flex-direction: column;
+        }
+
+        /* Custom scrollbar for entire sidebar */
+        .sidebar::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .sidebar::-webkit-scrollbar-track {
+            background: var(--gray-100);
+            border-radius: 4px;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, var(--primary-color), var(--primary-light));
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            min-height: 60px;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, var(--primary-dark), var(--primary-color));
+            transform: scale(1.05);
         }
 
         .sidebar-section {
@@ -514,8 +536,6 @@
 
         .slides-section {
             flex: 1;
-            overflow-y: auto;
-            max-height: 2400px;
             position: relative;
             background: linear-gradient(180deg, var(--gray-50) 0%, var(--white) 100%);
             border-radius: var(--radius-lg);
@@ -552,26 +572,7 @@
             z-index: 10;
         }
 
-        /* Custom scrollbar for slides section */
-        .slides-section::-webkit-scrollbar {
-            width: 6px;
-        }
 
-        .slides-section::-webkit-scrollbar-track {
-            background: var(--gray-100);
-            border-radius: 3px;
-        }
-
-        .slides-section::-webkit-scrollbar-thumb {
-            background: linear-gradient(180deg, var(--primary-color), var(--primary-light));
-            border-radius: 3px;
-            transition: all 0.3s ease;
-        }
-
-                .slides-section::-webkit-scrollbar-thumb:hover {
-            background: linear-gradient(180deg, var(--primary-dark), var(--primary-color));
-            transform: scale(1.05);
-        }
 
         /* Slide navigation controls */
         .slide-navigation {
@@ -789,6 +790,9 @@
             border-top: 1px solid var(--gray-200);
             padding-top: var(--spacing-4);
             margin-top: var(--spacing-4);
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-4);
         }
 
         .sidebar-title {
