@@ -151,6 +151,37 @@
             transform: translateY(-1px);
         }
 
+        .btn-success {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: var(--white);
+            border: 2px solid #059669;
+        }
+
+        .btn-success:hover {
+            background: linear-gradient(135deg, #059669, #047857);
+            border-color: #047857;
+            transform: translateY(-1px);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: var(--white);
+            border: 2px solid #dc2626;
+        }
+
+        .btn-danger:hover {
+            background: linear-gradient(135deg, #dc2626, #b91c1c);
+            border-color: #b91c1c;
+            transform: translateY(-1px);
+        }
+
+        .btn-danger:disabled {
+            background: var(--gray-400);
+            border-color: var(--gray-400);
+            cursor: not-allowed;
+            transform: none;
+        }
+
         .btn-large {
             padding: var(--spacing-4) var(--spacing-8);
             font-size: var(--font-size-lg);
@@ -203,6 +234,17 @@
             to { 
                 opacity: 1; 
                 transform: translateY(0); 
+            }
+        }
+
+        @keyframes fadeOut {
+            from { 
+                opacity: 1; 
+                transform: scale(1); 
+            }
+            to { 
+                opacity: 0; 
+                transform: scale(0.95); 
             }
         }
 
@@ -1488,8 +1530,14 @@
                             <button class="btn btn-secondary" style="width: 100%; margin-bottom: 0.5rem;" onclick="enhanceSlideAgain()">
                                 🔄 Enhance Again
                             </button>
-                            <button class="btn btn-secondary" style="width: 100%;" onclick="duplicateSlide()">
+                            <button class="btn btn-secondary" style="width: 100%; margin-bottom: 0.5rem;" onclick="duplicateSlide()">
                                 📋 Duplicate Slide
+                            </button>
+                            <button class="btn btn-success" style="width: 100%; margin-bottom: 0.5rem;" onclick="addNewSlide()">
+                                ➕ Add Slide
+                            </button>
+                            <button class="btn btn-danger" style="width: 100%;" onclick="deleteCurrentSlide()" id="deleteSlideBtn">
+                                🗑️ Delete Slide
                             </button>
                         </div>
                     </div>
@@ -2223,6 +2271,7 @@
             
             updateSlideList();
             showSlide(0);
+            updateDeleteButtonState();
         }
 
         function updateSlideList() {
@@ -2253,6 +2302,9 @@
             if (slidesHelp && currentPresentation.slides.length > 1) {
                 slidesHelp.style.display = 'none';
             }
+            
+            // Update delete button state
+            updateDeleteButtonState();
             
             currentPresentation.slides.forEach((slide, index) => {
                 const thumbnail = document.createElement('div');
@@ -2321,6 +2373,97 @@
             savePresentation();
             
             showNotification('success', 'Slide Added', 'New slide created successfully. You can enhance it with AI using the Enhance button.');
+        }
+
+        // ===== SLIDE MANAGEMENT FUNCTIONS =====
+        function addNewSlide() {
+            if (!currentPresentation) {
+                showNotification('error', 'No Presentation', 'Please create a presentation first.');
+                return;
+            }
+            
+            const newSlide = {
+                title: 'New Slide',
+                content: '<h2>New Slide</h2><p>Click here to edit content...</p>',
+                type: 'content',
+                autoEnhanced: false,
+                enhancementCount: 0
+            };
+            
+            // Add slide after current position
+            currentPresentation.slides.splice(currentSlideIndex + 1, 0, newSlide);
+            
+            // Switch to the new slide
+            showSlide(currentSlideIndex + 1);
+            savePresentation();
+            
+            // Animate the new slide thumbnail
+            const slideList = document.getElementById('slideList');
+            const newThumbnail = slideList.children[currentSlideIndex];
+            if (newThumbnail) {
+                newThumbnail.style.animation = 'slideUp 0.3s ease-out';
+                setTimeout(() => {
+                    newThumbnail.style.animation = '';
+                }, 300);
+            }
+            
+            showNotification('success', 'Slide Added', 'New slide created successfully!');
+            updateDeleteButtonState();
+        }
+
+        function deleteCurrentSlide() {
+            if (!currentPresentation || currentSlideIndex < 0) {
+                showNotification('error', 'No Slide Selected', 'Please select a slide to delete.');
+                return;
+            }
+            
+            // Prevent deleting if only 1 slide remains
+            if (currentPresentation.slides.length <= 1) {
+                showNotification('warning', 'Cannot Delete', 'Cannot delete the last slide. A presentation must have at least one slide.');
+                return;
+            }
+            
+            // Confirm deletion
+            if (!confirm('Are you sure you want to delete this slide? This action cannot be undone.')) {
+                return;
+            }
+            
+            // Store current slide for animation
+            const slideList = document.getElementById('slideList');
+            const currentThumbnail = slideList.children[currentSlideIndex];
+            
+            // Remove the slide
+            currentPresentation.slides.splice(currentSlideIndex, 1);
+            
+            // Determine which slide to show next
+            let nextSlideIndex = currentSlideIndex;
+            if (nextSlideIndex >= currentPresentation.slides.length) {
+                nextSlideIndex = currentPresentation.slides.length - 1;
+            }
+            
+            // Switch to next available slide
+            showSlide(nextSlideIndex);
+            savePresentation();
+            
+            // Animate the deletion
+            if (currentThumbnail) {
+                currentThumbnail.style.animation = 'fadeOut 0.3s ease-out';
+                setTimeout(() => {
+                    currentThumbnail.remove();
+                }, 300);
+            }
+            
+            showNotification('success', 'Slide Deleted', 'Slide removed successfully.');
+            updateDeleteButtonState();
+        }
+
+        function updateDeleteButtonState() {
+            const deleteBtn = document.getElementById('deleteSlideBtn');
+            if (deleteBtn) {
+                const canDelete = currentPresentation && currentPresentation.slides.length > 1;
+                deleteBtn.disabled = !canDelete;
+                deleteBtn.title = canDelete ? 'Delete current slide' : 'Cannot delete the last slide';
+            }
         }
 
         function duplicateSlide() {
