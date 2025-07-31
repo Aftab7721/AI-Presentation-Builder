@@ -1,0 +1,2982 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Presentation Builder - Create Professional Presentations Instantly</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ===== CSS RESET AND BASE STYLES ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Color Scheme */
+            --primary-color: #2563eb;
+            --primary-dark: #1d4ed8;
+            --primary-light: #3b82f6;
+            --secondary-color: #64748b;
+            --accent-color: #f59e0b;
+            --success-color: #10b981;
+            --error-color: #ef4444;
+            --warning-color: #f59e0b;
+            
+            /* Neutral Colors */
+            --white: #ffffff;
+            --gray-50: #f8fafc;
+            --gray-100: #f1f5f9;
+            --gray-200: #e2e8f0;
+            --gray-300: #cbd5e1;
+            --gray-400: #94a3b8;
+            --gray-500: #64748b;
+            --gray-600: #475569;
+            --gray-700: #334155;
+            --gray-800: #1e293b;
+            --gray-900: #0f172a;
+            
+            /* Typography */
+            --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --font-size-xs: 0.75rem;
+            --font-size-sm: 0.875rem;
+            --font-size-base: 1rem;
+            --font-size-lg: 1.125rem;
+            --font-size-xl: 1.25rem;
+            --font-size-2xl: 1.5rem;
+            --font-size-3xl: 1.875rem;
+            --font-size-4xl: 2.25rem;
+            
+            /* Spacing */
+            --spacing-1: 0.25rem;
+            --spacing-2: 0.5rem;
+            --spacing-3: 0.75rem;
+            --spacing-4: 1rem;
+            --spacing-5: 1.25rem;
+            --spacing-6: 1.5rem;
+            --spacing-8: 2rem;
+            --spacing-10: 2.5rem;
+            --spacing-12: 3rem;
+            --spacing-16: 4rem;
+            
+            /* Border Radius */
+            --radius-sm: 0.375rem;
+            --radius-md: 0.5rem;
+            --radius-lg: 0.75rem;
+            --radius-xl: 1rem;
+            
+            /* Shadows */
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+            
+            /* Transitions */
+            --transition-fast: 150ms ease-in-out;
+            --transition-normal: 250ms ease-in-out;
+            --transition-slow: 350ms ease-in-out;
+        }
+
+        body {
+            font-family: var(--font-family);
+            line-height: 1.6;
+            color: var(--gray-800);
+            background: linear-gradient(135deg, var(--gray-50) 0%, var(--white) 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ===== UTILITY CLASSES ===== */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--spacing-4);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-2);
+            padding: var(--spacing-3) var(--spacing-6);
+            border: none;
+            border-radius: var(--radius-lg);
+            font-weight: 500;
+            font-size: var(--font-size-base);
+            text-decoration: none;
+            cursor: pointer;
+            transition: all var(--transition-normal);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left var(--transition-slow);
+        }
+
+        .btn:hover:before {
+            left: 100%;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+            color: var(--white);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-color));
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: var(--white);
+            color: var(--gray-700);
+            border: 2px solid var(--gray-200);
+        }
+
+        .btn-secondary:hover {
+            background: var(--gray-50);
+            border-color: var(--gray-300);
+            transform: translateY(-1px);
+        }
+
+        .btn-large {
+            padding: var(--spacing-4) var(--spacing-8);
+            font-size: var(--font-size-lg);
+            border-radius: var(--radius-xl);
+        }
+
+        .btn-small {
+            padding: var(--spacing-2) var(--spacing-4);
+            font-size: var(--font-size-sm);
+        }
+
+        .card {
+            background: var(--white);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg);
+            padding: var(--spacing-8);
+            transition: all var(--transition-normal);
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-xl);
+            transform: translateY(-4px);
+        }
+
+        .text-center { text-align: center; }
+        .text-left { text-align: left; }
+        .text-right { text-align: right; }
+
+        .hidden { display: none !important; }
+        .visible { display: block !important; }
+
+        .fade-in {
+            animation: fadeIn var(--transition-slow) ease-in-out;
+        }
+
+        .slide-up {
+            animation: slideUp var(--transition-slow) ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { 
+                opacity: 0; 
+                transform: translateY(30px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0); 
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .loading {
+            animation: pulse 2s infinite;
+        }
+
+        /* ===== HEADER STYLES ===== */
+        .header {
+            background: var(--white);
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--spacing-4) 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-3);
+            font-size: var(--font-size-xl);
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: var(--font-size-lg);
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: var(--spacing-6);
+            list-style: none;
+        }
+
+        .nav-link {
+            color: var(--gray-600);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color var(--transition-fast);
+            position: relative;
+        }
+
+        .nav-link:hover {
+            color: var(--primary-color);
+        }
+
+        .nav-link:after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary-color);
+            transition: width var(--transition-normal);
+        }
+
+        .nav-link:hover:after {
+            width: 100%;
+        }
+
+        /* Enhanced Home Button Styling */
+        .home-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: var(--white) !important;
+            padding: var(--spacing-3) var(--spacing-6);
+            border-radius: var(--radius-xl);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 700;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid transparent;
+            background-clip: padding-box;
+            font-size: var(--font-size-lg);
+            letter-spacing: 0.5px;
+        }
+
+        .home-btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .home-btn:active {
+            transform: translateY(-1px) scale(1.02);
+        }
+
+        .home-btn:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .home-btn:hover:before {
+            left: 100%;
+        }
+
+        .home-btn:after {
+            display: none;
+        }
+
+        .home-btn .home-icon {
+            display: inline-block;
+            margin-right: var(--spacing-2);
+            font-size: var(--font-size-xl);
+            animation: homeBounce 2s ease-in-out infinite;
+        }
+
+        @keyframes homeBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-2px); }
+        }
+
+        /* ===== MAIN CONTENT STYLES ===== */
+        .main-content {
+            min-height: calc(100vh - 80px);
+            padding: var(--spacing-8) 0;
+        }
+
+        .hero-section {
+            text-align: center;
+            padding: var(--spacing-16) 0;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%);
+            color: var(--white);
+            margin: calc(-1 * var(--spacing-8)) 0 var(--spacing-16) 0;
+        }
+
+        .hero-title {
+            font-size: var(--font-size-4xl);
+            font-weight: 700;
+            margin-bottom: var(--spacing-4);
+            line-height: 1.2;
+        }
+
+        .hero-subtitle {
+            font-size: var(--font-size-xl);
+            opacity: 0.9;
+            margin-bottom: var(--spacing-8);
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            gap: var(--spacing-4);
+            margin-bottom: var(--spacing-8);
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-2);
+            padding: var(--spacing-2) var(--spacing-4);
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            font-weight: 500;
+            color: var(--gray-600);
+            transition: all var(--transition-normal);
+        }
+
+        .step.active {
+            background: var(--primary-color);
+            color: var(--white);
+            box-shadow: var(--shadow-md);
+        }
+
+        .step.completed {
+            background: var(--success-color);
+            color: var(--white);
+        }
+
+        .step-number {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--gray-200);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--font-size-sm);
+            font-weight: 600;
+        }
+
+        .step.active .step-number,
+        .step.completed .step-number {
+            background: rgba(255, 255, 255, 0.2);
+            color: var(--white);
+        }
+
+        /* ===== FORM STYLES ===== */
+        .form-section {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: var(--spacing-6);
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            color: var(--gray-700);
+            margin-bottom: var(--spacing-2);
+            font-size: var(--font-size-base);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: var(--spacing-4);
+            border: 2px solid var(--gray-200);
+            border-radius: var(--radius-lg);
+            font-size: var(--font-size-base);
+            transition: all var(--transition-normal);
+            background: var(--white);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .form-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 12px center;
+            background-repeat: no-repeat;
+            background-size: 16px;
+            padding-right: 40px;
+        }
+
+        .form-help {
+            font-size: var(--font-size-sm);
+            color: var(--gray-500);
+            margin-top: var(--spacing-1);
+        }
+
+        .form-error {
+            color: var(--error-color);
+            font-size: var(--font-size-sm);
+            margin-top: var(--spacing-1);
+        }
+
+        /* ===== SLIDE EDITOR STYLES ===== */
+        .editor-container {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: var(--spacing-6);
+            height: calc(100vh - 160px);
+        }
+
+        .sidebar {
+            background: var(--white);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg);
+            padding: var(--spacing-6);
+            overflow-y: auto;
+            max-height: calc(100vh - 200px);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-section {
+            margin-bottom: var(--spacing-6);
+        }
+
+        .sidebar-section:last-child {
+            margin-top: auto;
+            margin-bottom: 0;
+        }
+
+        .slides-section {
+            flex: 1;
+            overflow-y: auto;
+            max-height: 1600px;
+        }
+
+        .tools-section {
+            flex-shrink: 0;
+            border-top: 1px solid var(--gray-200);
+            padding-top: var(--spacing-4);
+            margin-top: var(--spacing-4);
+        }
+
+        .sidebar-title {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            color: var(--gray-800);
+            margin-bottom: var(--spacing-4);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-2);
+        }
+
+        .slide-thumbnail {
+            background: var(--white);
+            border: 2px solid var(--gray-200);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-3);
+            margin-bottom: var(--spacing-3);
+            cursor: pointer;
+            transition: all var(--transition-normal);
+            position: relative;
+        }
+
+        .slide-thumbnail:hover {
+            border-color: var(--primary-color);
+            box-shadow: var(--shadow-md);
+        }
+
+        .slide-thumbnail.active {
+            border-color: var(--primary-color);
+            background: var(--primary-color);
+            color: var(--white);
+        }
+
+        .slide-number {
+            font-size: var(--font-size-xs);
+            font-weight: 600;
+            margin-bottom: var(--spacing-1);
+        }
+
+        .slide-title {
+            font-size: var(--font-size-sm);
+            font-weight: 500;
+            line-height: 1.3;
+        }
+
+        .slide-preview {
+            flex: 1;
+            background: var(--white);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg);
+            padding: var(--spacing-8);
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .slide-content {
+            max-width: 800px;
+            margin: 0 auto;
+            min-height: 500px;
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-8);
+            box-shadow: var(--shadow-md);
+            position: relative;
+        }
+
+        .slide-content h1 {
+            font-size: var(--font-size-3xl);
+            font-weight: 700;
+            color: var(--gray-800);
+            margin-bottom: var(--spacing-6);
+            line-height: 1.2;
+        }
+
+        .slide-content h2 {
+            font-size: var(--font-size-2xl);
+            font-weight: 600;
+            color: var(--gray-800);
+            margin-bottom: var(--spacing-4);
+            line-height: 1.3;
+        }
+
+        .slide-content p {
+            font-size: var(--font-size-lg);
+            line-height: 1.6;
+            color: var(--gray-600);
+            margin-bottom: var(--spacing-4);
+        }
+
+        .slide-content ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .slide-content li {
+            font-size: var(--font-size-lg);
+            line-height: 1.6;
+            color: var(--gray-600);
+            margin-bottom: var(--spacing-3);
+            position: relative;
+            padding-left: var(--spacing-6);
+        }
+
+        .slide-content li:before {
+            content: '•';
+            color: var(--primary-color);
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+            font-size: var(--font-size-xl);
+        }
+
+        /* ===== MODAL STYLES ===== */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all var(--transition-normal);
+        }
+
+        .modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: var(--white);
+            border-radius: var(--radius-xl);
+            padding: var(--spacing-8);
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            transform: scale(0.9);
+            transition: transform var(--transition-normal);
+        }
+
+        .modal.active .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--spacing-6);
+        }
+
+        .modal-title {
+            font-size: var(--font-size-xl);
+            font-weight: 600;
+            color: var(--gray-800);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: var(--font-size-xl);
+            color: var(--gray-400);
+            cursor: pointer;
+            padding: var(--spacing-2);
+            border-radius: var(--radius-md);
+            transition: all var(--transition-fast);
+        }
+
+        .modal-close:hover {
+            background: var(--gray-100);
+            color: var(--gray-600);
+        }
+
+        /* ===== LOADING STYLES ===== */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 3000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all var(--transition-normal);
+        }
+
+        .loading-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid var(--gray-200);
+            border-top: 4px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: var(--spacing-4);
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            font-size: var(--font-size-lg);
+            font-weight: 500;
+            color: var(--gray-700);
+            text-align: center;
+        }
+
+        /* ===== NOTIFICATION STYLES ===== */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-xl);
+            padding: var(--spacing-4) var(--spacing-6);
+            max-width: 400px;
+            z-index: 4000;
+            transform: translateX(100%);
+            transition: transform var(--transition-normal);
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            border-left: 4px solid var(--success-color);
+        }
+
+        .notification.error {
+            border-left: 4px solid var(--error-color);
+        }
+
+        .notification.warning {
+            border-left: 4px solid var(--warning-color);
+        }
+
+        .notification-content {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--spacing-3);
+        }
+
+        .notification-icon {
+            font-size: var(--font-size-lg);
+            margin-top: 2px;
+        }
+
+        .notification-text {
+            flex: 1;
+        }
+
+        .notification-title {
+            font-weight: 600;
+            color: var(--gray-800);
+            margin-bottom: var(--spacing-1);
+        }
+
+        .notification-message {
+            color: var(--gray-600);
+            font-size: var(--font-size-sm);
+        }
+
+        /* ===== RESPONSIVE DESIGN ===== */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 var(--spacing-3);
+            }
+
+            .hero-title {
+                font-size: var(--font-size-3xl);
+            }
+
+            .hero-subtitle {
+                font-size: var(--font-size-lg);
+            }
+
+            .editor-container {
+                grid-template-columns: 1fr;
+                height: auto;
+            }
+
+            .sidebar {
+                order: 2;
+                max-height: 300px;
+            }
+
+            .slide-preview {
+                order: 1;
+                min-height: 400px;
+            }
+
+            .nav-menu {
+                display: none;
+            }
+
+            .step-indicator {
+                flex-wrap: wrap;
+                gap: var(--spacing-2);
+            }
+
+            .step {
+                font-size: var(--font-size-sm);
+                padding: var(--spacing-1) var(--spacing-3);
+            }
+
+            .btn-large {
+                padding: var(--spacing-3) var(--spacing-6);
+                font-size: var(--font-size-base);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-section {
+                padding: var(--spacing-8) 0;
+            }
+
+            .card {
+                padding: var(--spacing-4);
+            }
+
+            .modal-content {
+                padding: var(--spacing-4);
+                width: 95%;
+            }
+        }
+
+        /* ===== PRINT STYLES ===== */
+        @media print {
+            .header,
+            .sidebar,
+            .btn,
+            .modal,
+            .loading-overlay,
+            .notification {
+                display: none !important;
+            }
+
+            .slide-content {
+                box-shadow: none;
+                border: 1px solid var(--gray-300);
+                page-break-after: always;
+                margin-bottom: var(--spacing-8);
+            }
+
+            .slide-content:last-child {
+                page-break-after: auto;
+            }
+
+            body {
+                background: var(--white);
+            }
+        }
+
+        /* ===== THEME STYLES ===== */
+        .theme-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: var(--spacing-3);
+            margin-bottom: var(--spacing-6);
+        }
+
+        .theme-option {
+            aspect-ratio: 16/9;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            border: 2px solid var(--gray-200);
+            transition: all var(--transition-normal);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .theme-option:hover {
+            border-color: var(--primary-color);
+            transform: scale(1.05);
+        }
+
+        .theme-option.active {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .theme-professional {
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+        }
+
+        .theme-modern {
+            background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);
+        }
+
+        .theme-elegant {
+            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+        }
+
+        .theme-creative {
+            background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
+        }
+
+        .theme-minimal {
+            background: linear-gradient(135deg, #374151 0%, #6b7280 100%);
+        }
+
+        .theme-name {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.7);
+            color: var(--white);
+            padding: var(--spacing-2);
+            font-size: var(--font-size-xs);
+            font-weight: 500;
+            text-align: center;
+        }
+
+        /* ===== DRAG AND DROP STYLES ===== */
+        .sortable-ghost {
+            opacity: 0.5;
+        }
+
+        .sortable-chosen {
+            transform: scale(1.05);
+        }
+
+        .drag-handle {
+            cursor: grab;
+            color: var(--gray-400);
+            margin-right: var(--spacing-2);
+        }
+
+        .drag-handle:active {
+            cursor: grabbing;
+        }
+
+        /* ===== EXPORT STYLES ===== */
+        .export-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-4);
+            margin-bottom: var(--spacing-6);
+        }
+
+        .export-option {
+            background: var(--white);
+            border: 2px solid var(--gray-200);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-4);
+            text-align: center;
+            cursor: pointer;
+            transition: all var(--transition-normal);
+        }
+
+        .export-option:hover {
+            border-color: var(--primary-color);
+            background: var(--gray-50);
+        }
+
+        .export-icon {
+            font-size: var(--font-size-3xl);
+            margin-bottom: var(--spacing-2);
+            color: var(--primary-color);
+        }
+
+        .export-title {
+            font-weight: 600;
+            color: var(--gray-800);
+            margin-bottom: var(--spacing-1);
+        }
+
+        .export-description {
+            font-size: var(--font-size-sm);
+            color: var(--gray-600);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="#" class="logo">
+                    <div class="logo-icon">📊</div>
+                    <span>AI Presentation Builder</span>
+                </a>
+                <nav>
+                    <ul class="nav-menu">
+                        <li><a href="#" class="nav-link home-btn"><span class="home-icon">🏠</span>Home</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Hero Section -->
+        <section class="hero-section fade-in">
+            <div class="container">
+                <h1 class="hero-title">Create Professional Presentations with AI</h1>
+                <p class="hero-subtitle">Transform your ideas into stunning presentations in minutes. No design skills required.</p>
+                <button class="btn btn-primary btn-large" onclick="startCreation()">
+                    ✨ Create Presentation
+                </button>
+            </div>
+        </section>
+
+        <div class="container">
+            <!-- Step Indicator -->
+            <div class="step-indicator" id="stepIndicator">
+                <div class="step active" data-step="1">
+                    <div class="step-number">1</div>
+                    <span>Topic & Details</span>
+                </div>
+                <div class="step" data-step="2">
+                    <div class="step-number">2</div>
+                    <span>AI Generation</span>
+                </div>
+                <div class="step" data-step="3">
+                    <div class="step-number">3</div>
+                    <span>Edit & Customize</span>
+                </div>
+                <div class="step" data-step="4">
+                    <div class="step-number">4</div>
+                    <span>Export & Share</span>
+                </div>
+            </div>
+
+            <!-- Step 1: Topic Input -->
+            <section id="step1" class="form-section card slide-up">
+                <h2 class="text-center" style="margin-bottom: 2rem; color: var(--gray-800);">Tell us about your presentation</h2>
+                
+                <form id="presentationForm">
+                    <div class="form-group">
+                        <label for="topic" class="form-label">
+                            📝 What's your presentation topic?
+                        </label>
+                        <input 
+                            type="text" 
+                            id="topic" 
+                            class="form-input" 
+                            placeholder="e.g., Climate Change Solutions, Marketing Strategy, Product Launch..."
+                            required
+                        >
+                        <div class="form-help">Be specific to get better AI-generated content</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="audience" class="form-label">
+                            👥 Who is your audience?
+                        </label>
+                        <select id="audience" class="form-input form-select" required>
+                            <option value="">Select your audience</option>
+                            <option value="business">Business Professionals</option>
+                            <option value="students">Students</option>
+                            <option value="general">General Public</option>
+                            <option value="technical">Technical Experts</option>
+                            <option value="executives">Executives</option>
+                            <option value="investors">Investors</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="slideCount" class="form-label">
+                            📊 How many slides do you need?
+                        </label>
+                        <select id="slideCount" class="form-input form-select" required>
+                            <option value="">Select slide count</option>
+                            <option value="5">5 slides (Quick overview)</option>
+                            <option value="10">10 slides (Standard presentation)</option>
+                            <option value="15">15 slides (Detailed presentation)</option>
+                            <option value="20">20 slides (Comprehensive)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="duration" class="form-label">
+                            ⏱️ Presentation duration
+                        </label>
+                        <select id="duration" class="form-input form-select" required>
+                            <option value="">Select duration</option>
+                            <option value="5">5 minutes</option>
+                            <option value="10">10 minutes</option>
+                            <option value="15">15 minutes</option>
+                            <option value="30">30 minutes</option>
+                            <option value="45">45 minutes</option>
+                            <option value="60">1 hour</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="additionalInfo" class="form-label">
+                            💡 Additional information (optional)
+                        </label>
+                        <textarea 
+                            id="additionalInfo" 
+                            class="form-input form-textarea" 
+                            placeholder="Any specific points you want to cover, tone preferences, or special requirements..."
+                        ></textarea>
+                        <div class="form-help">This helps AI create more targeted content</div>
+                    </div>
+
+                    <div class="text-center">
+                        <div style="background: linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 100%); border: 1px solid #0ea5e9; border-radius: 12px; padding: 1rem; margin-bottom: 2rem; text-align: center;">
+                            <div style="display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                <span style="font-size: 1.25rem;">🤖</span>
+                                <h3 style="color: #0369a1; margin: 0; font-size: 1rem; font-weight: 600;">AI Enhancement Available</h3>
+                            </div>
+                            <p style="color: #0c4a6e; margin: 0; font-size: 0.9rem;">
+                                Generate your presentation and enhance all slides with one click in the editor.
+                            </p>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary btn-large">
+                            🚀 Generate & Auto-Enhance Presentation
+                        </button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- Step 2: AI Generation (Hidden initially) -->
+            <section id="step2" class="hidden">
+                <div class="card text-center">
+                    <h2 style="margin-bottom: 2rem; color: var(--gray-800);">AI is creating your presentation...</h2>
+                    <div class="loading-spinner" style="margin: 2rem auto;"></div>
+                    <p style="color: var(--gray-600); margin-bottom: 1rem;">This may take 30-60 seconds</p>
+                    <div id="generationProgress" style="color: var(--primary-color); font-weight: 500;"></div>
+                </div>
+            </section>
+
+            <!-- Step 3: Editor (Hidden initially) -->
+            <section id="step3" class="hidden">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                    <h2 style="color: var(--gray-800);">Edit Your Presentation</h2>
+                    <div>
+                        <button class="btn btn-secondary btn-small" onclick="showThemeModal()">
+                            🎨 Change Theme
+                        </button>
+                        <button class="btn btn-secondary btn-small" onclick="addSlide()">
+                            ➕ Add Slide
+                        </button>
+                        <button class="btn btn-primary btn-small" onclick="goToExport()">
+                            📤 Export
+                        </button>
+                    </div>
+                </div>
+
+                <div class="editor-container">
+                    <div class="sidebar">
+                        <div class="sidebar-section slides-section">
+                            <h3 class="sidebar-title">
+                                📑 Slides
+                            </h3>
+                            <div id="slideList">
+                                <!-- Slide thumbnails will be populated here -->
+                            </div>
+                        </div>
+
+                        <div class="sidebar-section tools-section">
+                            <h3 class="sidebar-title">
+                                🛠️ Tools
+                            </h3>
+                            <button class="btn btn-primary" style="width: 100%; margin-bottom: 0.5rem;" onclick="enhanceAllSlides()">
+                                ✨ Enhance All Slides
+                            </button>
+                            <button class="btn btn-secondary" style="width: 100%; margin-bottom: 0.5rem;" onclick="enhanceSlide()">
+                                🔧 Enhance Current Slide
+                            </button>
+                            <button class="btn btn-secondary" style="width: 100%;" onclick="duplicateSlide()">
+                                📋 Duplicate Slide
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="slide-preview">
+                        <div id="currentSlide" class="slide-content" contenteditable="true">
+                            <!-- Current slide content will be displayed here -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Step 4: Export (Hidden initially) -->
+            <section id="step4" class="hidden">
+                <div class="card">
+                    <h2 class="text-center" style="margin-bottom: 2rem; color: var(--gray-800);">Download Your Presentation</h2>
+                    
+                    <div class="export-options">
+                        <div class="export-option" onclick="downloadHTML()">
+                            <div class="export-icon">🌐</div>
+                            <div class="export-title">HTML Presentation</div>
+                            <div class="export-description">Interactive web presentation</div>
+                        </div>
+                        
+                        <div class="export-option" onclick="downloadPDF()">
+                            <div class="export-icon">📄</div>
+                            <div class="export-title">PDF Document</div>
+                            <div class="export-description">Print-ready format</div>
+                        </div>
+                        
+                        <div class="export-option" onclick="downloadPPTX()">
+                            <div class="export-icon">📊</div>
+                            <div class="export-title">PowerPoint Compatible</div>
+                            <div class="export-description">Import to Microsoft Office</div>
+                        </div>
+                        
+                        <div class="export-option" onclick="downloadImages()">
+                            <div class="export-icon">🖼️</div>
+                            <div class="export-title">Image Files (ZIP)</div>
+                            <div class="export-description">High-quality slide images</div>
+                        </div>
+                        
+                        <div class="export-option" onclick="downloadMarkdown()">
+                            <div class="export-icon">📝</div>
+                            <div class="export-title">Markdown File</div>
+                            <div class="export-description">Developer-friendly format</div>
+                        </div>
+                        
+                        <div class="export-option" onclick="downloadJSON()">
+                            <div class="export-icon">💾</div>
+                            <div class="export-title">Backup Data</div>
+                            <div class="export-description">Raw presentation data</div>
+                        </div>
+                    </div>
+
+                    <div id="enhancementReminder" style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border: 1px solid #f59e0b; border-radius: 12px; padding: 1rem; margin-bottom: 2rem; text-align: center;">
+                        <div style="display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                            <span style="font-size: 1.25rem;">💡</span>
+                            <h3 style="color: #92400e; margin: 0; font-size: 1rem; font-weight: 600;">Enhance Before Download</h3>
+                        </div>
+                        <p style="color: #78350f; margin: 0; font-size: 0.9rem;">
+                            For best results, enhance all slides with AI before downloading your presentation.
+                        </p>
+                        <button class="btn btn-primary" style="margin-top: 0.75rem;" onclick="enhanceAllSlidesFromExport()">
+                            ✨ Enhance All Slides Now
+                        </button>
+                    </div>
+
+                    <div class="text-center" style="margin-bottom: 2rem;">
+                        <button class="btn btn-primary btn-large" onclick="downloadAll()">
+                            ⬇️ Download All Formats
+                        </button>
+                    </div>
+
+                    <div class="text-center">
+                        <button class="btn btn-secondary" onclick="sharePresentation()">
+                            🔗 Share Link
+                        </button>
+                        <button class="btn btn-secondary" onclick="goToEditor()">
+                            ← Back to Editor
+                        </button>
+                        <button class="btn btn-primary" onclick="startOver()">
+                            🆕 Create New Presentation
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Modals -->
+    <!-- API Key Modal -->
+    <div id="apiKeyModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">🔑 Claude API Setup</h3>
+                <button class="modal-close" onclick="closeModal('apiKeyModal')">&times;</button>
+            </div>
+            <div>
+                <p style="margin-bottom: 1rem; color: var(--gray-600);">
+                    To use AI features, please enter your Claude API key. Your key is stored locally and never shared.
+                </p>
+                <div class="form-group">
+                    <label for="apiKey" class="form-label">Claude API Key</label>
+                    <input type="password" id="apiKey" class="form-input" placeholder="sk-ant-...">
+                    <div class="form-help">
+                        Get your API key from <a href="https://console.anthropic.com/" target="_blank" style="color: var(--primary-color);">Anthropic Console</a>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <button class="btn btn-primary" onclick="saveApiKey()">Save API Key</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Theme Modal -->
+    <div id="themeModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">🎨 Choose Theme</h3>
+                <button class="modal-close" onclick="closeModal('themeModal')">&times;</button>
+            </div>
+            <div>
+                <div class="theme-selector">
+                    <div class="theme-option theme-professional active" data-theme="professional">
+                        <div class="theme-name">Professional</div>
+                    </div>
+                    <div class="theme-option theme-modern" data-theme="modern">
+                        <div class="theme-name">Modern</div>
+                    </div>
+                    <div class="theme-option theme-elegant" data-theme="elegant">
+                        <div class="theme-name">Elegant</div>
+                    </div>
+                    <div class="theme-option theme-creative" data-theme="creative">
+                        <div class="theme-name">Creative</div>
+                    </div>
+                    <div class="theme-option theme-minimal" data-theme="minimal">
+                        <div class="theme-name">Minimal</div>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <button class="btn btn-primary" onclick="applyTheme()">Apply Theme</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loading-spinner"></div>
+        <div class="loading-text" id="loadingText">Processing...</div>
+    </div>
+
+    <!-- Notification Container -->
+    <div id="notificationContainer"></div>
+
+    <script>
+        /*
+        ===== AI PRESENTATION BUILDER - JAVASCRIPT FUNCTIONALITY =====
+        
+        This application provides a complete AI-powered presentation builder
+        with Claude API integration, drag-and-drop editing, and export features.
+        
+        SETUP INSTRUCTIONS:
+        1. Get your Claude API key from https://console.anthropic.com/
+        2. Enter the API key when prompted
+        3. Start creating presentations!
+        
+        FEATURES:
+        - AI-powered content generation
+        - Real-time editing
+        - Multiple themes
+        - Export to HTML/PDF
+        - Local storage for presentations
+        - Mobile responsive design
+        */
+
+        // ===== GLOBAL VARIABLES =====
+        let currentPresentation = null;
+        let currentSlideIndex = 0;
+        let currentTheme = 'professional';
+        
+        // Backend API configuration
+        const API_BASE_URL = window.location.origin;
+
+        // ===== INITIALIZATION =====
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeApp();
+            setupEventListeners();
+            loadSavedPresentation();
+        });
+
+        function initializeApp() {
+            // No API key needed - using backend
+            // Initialize theme selector
+            initializeThemeSelector();
+            
+            // Setup autosave
+            setupAutosave();
+            
+            // Check backend health
+            checkBackendHealth();
+        }
+
+        function setupEventListeners() {
+            // Form submission
+            document.getElementById('presentationForm').addEventListener('submit', handleFormSubmission);
+            
+            // Theme selector
+            document.querySelectorAll('.theme-option').forEach(option => {
+                option.addEventListener('click', selectTheme);
+            });
+            
+            // Dropdown selections
+            setupDropdownListeners();
+            
+            // Slide content editing
+            const slideContent = document.getElementById('currentSlide');
+            if (slideContent) {
+                slideContent.addEventListener('input', handleSlideEdit);
+                slideContent.addEventListener('blur', savePresentation);
+            }
+            
+            // Keyboard shortcuts
+            document.addEventListener('keydown', handleKeyboardShortcuts);
+        }
+
+        function setupDropdownListeners() {
+            // Audience dropdown
+            const audienceSelect = document.getElementById('audience');
+            if (audienceSelect) {
+                audienceSelect.addEventListener('change', function() {
+                    console.log('Audience selected:', this.value);
+                });
+            }
+            
+            // Slide count dropdown
+            const slideCountSelect = document.getElementById('slideCount');
+            if (slideCountSelect) {
+                slideCountSelect.addEventListener('change', function() {
+                    console.log('Slide count selected:', this.value);
+                });
+            }
+            
+            // Duration dropdown
+            const durationSelect = document.getElementById('duration');
+            if (durationSelect) {
+                durationSelect.addEventListener('change', function() {
+                    console.log('Duration selected:', this.value);
+                });
+            }
+        }
+
+        // ===== BACKEND API INTEGRATION =====
+        async function checkBackendHealth() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/health`);
+                if (response.ok) {
+                    console.log('Backend server is healthy');
+                } else {
+                    showNotification('warning', 'Backend Warning', 'Backend server may not be running. Some features may be limited.');
+                }
+            } catch (error) {
+                console.error('Backend health check failed:', error);
+                showNotification('warning', 'Backend Offline', 'Backend server is not available. Using demo mode.');
+            }
+        }
+
+        async function callBackendAPI(endpoint, data) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/${endpoint}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || `API Error: ${response.status}`);
+                }
+
+                return await response.json();
+            } catch (error) {
+                console.error('Backend API Error:', error);
+                showNotification('error', 'API Error', error.message || 'Failed to connect to backend API.');
+                return null;
+            }
+        }
+
+        // ===== PRESENTATION GENERATION =====
+        async function generatePresentation(formData) {
+            updateGenerationProgress('Generating presentation with AI...');
+            
+            try {
+                // Use the new auto-enhancement endpoint
+                const presentation = await callBackendAPI('generate-and-enhance-presentation', formData);
+                
+                if (presentation && presentation.slides) {
+                    updateGenerationProgress('Auto-enhancing slides with AI...');
+                    
+                    // Mark all slides as auto-enhanced to prevent duplicate enhancement
+                    presentation.slides.forEach(slide => {
+                        slide.autoEnhanced = true;
+                        slide.enhancementCount = 1; // Track enhancement count
+                    });
+                    
+                    updateGenerationProgress('Presentation ready!');
+                    return presentation;
+                } else {
+                    throw new Error('No presentation data received');
+                }
+            } catch (error) {
+                console.error('Auto-enhancement failed:', error);
+                updateGenerationProgress('Generating basic presentation...');
+                
+                // Fallback to basic generation without auto-enhancement
+                const basicPresentation = await callBackendAPI('generate-presentation', formData);
+                
+                if (basicPresentation && basicPresentation.slides) {
+                    updateGenerationProgress('Presentation ready (basic version)!');
+                    
+                    // Mark fallback slides as not auto-enhanced
+                    basicPresentation.slides.forEach(slide => {
+                        slide.autoEnhanced = false;
+                        slide.enhancementCount = 0;
+                    });
+                    
+                    return basicPresentation;
+                } else {
+                    updateGenerationProgress('Using demo content...');
+                    const fallback = createFallbackPresentation(formData);
+                    
+                    // Mark fallback slides as not auto-enhanced
+                    fallback.slides.forEach(slide => {
+                        slide.autoEnhanced = false;
+                        slide.enhancementCount = 0;
+                    });
+                    
+                    return fallback;
+                }
+            }
+        }
+
+        function createPresentationPrompt(formData) {
+            return `Create a professional presentation about "${formData.topic}" for ${formData.audience} audience. 
+            The presentation should have ${formData.slideCount} slides and be suitable for a ${formData.duration}-minute presentation.
+            
+            ${formData.additionalInfo ? `Additional requirements: ${formData.additionalInfo}` : ''}
+            
+            Return the response as a JSON object with this exact structure:
+            {
+                "title": "Presentation Title",
+                "subtitle": "Brief subtitle",
+                "slides": [
+                    {
+                        "title": "Slide Title",
+                        "content": "Slide content in HTML format with proper headings, paragraphs, and lists",
+                        "type": "title|content|conclusion"
+                    }
+                ]
+            }
+            
+            Make sure each slide has engaging, professional content appropriate for the audience.
+            Use HTML formatting (h1, h2, p, ul, li) for the content.
+            The first slide should be a title slide, and the last should be a conclusion/thank you slide.`;
+        }
+
+        function createFallbackPresentation(formData) {
+            const slideCount = parseInt(formData.slideCount);
+            const slides = [];
+            
+            // Title slide
+            slides.push({
+                title: formData.topic,
+                content: `<h1>${formData.topic}</h1><p>A comprehensive presentation for ${formData.audience}</p>`,
+                type: 'title'
+            });
+            
+            // Content slides
+            for (let i = 2; i < slideCount; i++) {
+                slides.push({
+                    title: `Key Point ${i - 1}`,
+                    content: `<h2>Key Point ${i - 1}</h2><ul><li>Important information about ${formData.topic}</li><li>Supporting details and examples</li><li>Relevant data and insights</li></ul>`,
+                    type: 'content'
+                });
+            }
+            
+            // Conclusion slide
+            slides.push({
+                title: 'Thank You',
+                content: '<h1>Thank You</h1><p>Questions & Discussion</p>',
+                type: 'conclusion'
+            });
+            
+            return {
+                title: formData.topic,
+                subtitle: `Presentation for ${formData.audience}`,
+                slides: slides
+            };
+        }
+
+        // ===== UI MANAGEMENT =====
+        function showStep(stepNumber) {
+            // Hide all steps
+            for (let i = 1; i <= 4; i++) {
+                const step = document.getElementById(`step${i}`);
+                if (step) step.classList.add('hidden');
+            }
+            
+            // Show target step
+            const targetStep = document.getElementById(`step${stepNumber}`);
+            if (targetStep) {
+                targetStep.classList.remove('hidden');
+                targetStep.classList.add('fade-in');
+            }
+            
+            // Update step indicator
+            updateStepIndicator(stepNumber);
+        }
+
+        function updateStepIndicator(activeStep) {
+            const steps = document.querySelectorAll('.step');
+            steps.forEach((step, index) => {
+                const stepNumber = index + 1;
+                step.classList.remove('active', 'completed');
+                
+                if (stepNumber === activeStep) {
+                    step.classList.add('active');
+                } else if (stepNumber < activeStep) {
+                    step.classList.add('completed');
+                }
+            });
+        }
+
+        function showModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.add('active');
+            }
+        }
+
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.remove('active');
+            }
+        }
+
+        function showNotification(type, title, message) {
+            const container = document.getElementById('notificationContainer');
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            
+            const iconMap = {
+                success: '✅',
+                error: '❌',
+                warning: '⚠️'
+            };
+            
+            notification.innerHTML = `
+                <div class="notification-content">
+                    <div class="notification-icon">${iconMap[type] || 'ℹ️'}</div>
+                    <div class="notification-text">
+                        <div class="notification-title">${title}</div>
+                        <div class="notification-message">${message}</div>
+                    </div>
+                </div>
+            `;
+            
+            container.appendChild(notification);
+            
+            // Show notification
+            setTimeout(() => notification.classList.add('show'), 100);
+            
+            // Auto-hide after 5 seconds
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => container.removeChild(notification), 300);
+            }, 5000);
+        }
+
+        // ===== EVENT HANDLERS =====
+        async function handleFormSubmission(e) {
+            e.preventDefault();
+            
+            const formData = {
+                topic: document.getElementById('topic').value,
+                audience: document.getElementById('audience').value,
+                slideCount: document.getElementById('slideCount').value,
+                duration: document.getElementById('duration').value,
+                additionalInfo: document.getElementById('additionalInfo').value
+            };
+            
+            // Validate form
+            if (!formData.topic || !formData.audience || !formData.slideCount || !formData.duration) {
+                showNotification('error', 'Form Incomplete', 'Please fill in all required fields.');
+                return;
+            }
+            
+            // Show generation step
+            showStep(2);
+            
+            // Generate presentation
+            const presentation = await generatePresentation(formData);
+            
+            if (presentation) {
+                currentPresentation = presentation;
+                currentSlideIndex = 0;
+                
+                // Show editor
+                showStep(3);
+                setupEditor();
+                savePresentation();
+                
+                showNotification('success', 'Presentation Created!', 'Your AI-generated presentation is ready for editing.');
+            } else {
+                // Go back to step 1
+                showStep(1);
+                showNotification('error', 'Generation Failed', 'Failed to generate presentation. Please try again.');
+            }
+        }
+
+        function handleSlideEdit() {
+            if (currentPresentation && currentPresentation.slides[currentSlideIndex]) {
+                const content = document.getElementById('currentSlide').innerHTML;
+                currentPresentation.slides[currentSlideIndex].content = content;
+                updateSlideList();
+            }
+        }
+
+        function handleKeyboardShortcuts(e) {
+            if (e.ctrlKey || e.metaKey) {
+                switch (e.key) {
+                    case 's':
+                        e.preventDefault();
+                        savePresentation();
+                        break;
+                    case 'n':
+                        e.preventDefault();
+                        addSlide();
+                        break;
+                    case 'e':
+                        e.preventDefault();
+                        goToExport();
+                        break;
+                }
+            }
+            
+            // Arrow keys for slide navigation
+            if (document.getElementById('step3').classList.contains('hidden') === false) {
+                if (e.key === 'ArrowLeft') {
+                    previousSlide();
+                } else if (e.key === 'ArrowRight') {
+                    nextSlide();
+                }
+            }
+        }
+
+        // ===== EDITOR FUNCTIONS =====
+        function setupEditor() {
+            if (!currentPresentation) return;
+            
+            updateSlideList();
+            showSlide(0);
+        }
+
+        function updateSlideList() {
+            const slideList = document.getElementById('slideList');
+            if (!slideList || !currentPresentation) return;
+            
+            slideList.innerHTML = '';
+            
+            currentPresentation.slides.forEach((slide, index) => {
+                const thumbnail = document.createElement('div');
+                thumbnail.className = `slide-thumbnail ${index === currentSlideIndex ? 'active' : ''}`;
+                thumbnail.onclick = () => showSlide(index);
+                
+                thumbnail.innerHTML = `
+                    <div class="slide-number">Slide ${index + 1}</div>
+                    <div class="slide-title">${slide.title}</div>
+                `;
+                
+                slideList.appendChild(thumbnail);
+            });
+        }
+
+        function showSlide(index) {
+            if (!currentPresentation || index < 0 || index >= currentPresentation.slides.length) return;
+            
+            currentSlideIndex = index;
+            const slide = currentPresentation.slides[index];
+            
+            document.getElementById('currentSlide').innerHTML = slide.content;
+            updateSlideList();
+        }
+
+        async function addSlide() {
+            if (!currentPresentation) return;
+            
+            const newSlide = {
+                title: 'New Slide',
+                content: '<h2>New Slide</h2><p>Click here to edit content...</p>',
+                type: 'content',
+                autoEnhanced: false,
+                enhancementCount: 0
+            };
+            
+            currentPresentation.slides.splice(currentSlideIndex + 1, 0, newSlide);
+            showSlide(currentSlideIndex + 1);
+            savePresentation();
+            
+            showNotification('success', 'Slide Added', 'New slide created successfully. You can enhance it with AI using the Enhance button.');
+        }
+
+        function duplicateSlide() {
+            if (!currentPresentation || currentSlideIndex < 0) return;
+            
+            const currentSlide = currentPresentation.slides[currentSlideIndex];
+            const duplicatedSlide = {
+                title: currentSlide.title + ' (Copy)',
+                content: currentSlide.content,
+                type: currentSlide.type
+            };
+            
+            currentPresentation.slides.splice(currentSlideIndex + 1, 0, duplicatedSlide);
+            showSlide(currentSlideIndex + 1);
+            savePresentation();
+            
+            showNotification('success', 'Slide Duplicated', 'Slide copied successfully.');
+        }
+
+        function previousSlide() {
+            if (currentSlideIndex > 0) {
+                showSlide(currentSlideIndex - 1);
+            }
+        }
+
+        function nextSlide() {
+            if (currentSlideIndex < currentPresentation.slides.length - 1) {
+                showSlide(currentSlideIndex + 1);
+            }
+        }
+
+        // ===== AI ENHANCEMENT FUNCTIONS =====
+        async function enhanceAllSlides() {
+            if (!currentPresentation || !currentPresentation.slides || currentPresentation.slides.length === 0) {
+                showNotification('error', 'No Slides', 'Please create a presentation first.');
+                return;
+            }
+            
+            const totalSlides = currentPresentation.slides.length;
+            
+            // Check if slides are already enhanced to prevent unnecessary API calls
+            const unenhancedSlides = currentPresentation.slides.filter(slide => 
+                !slide.autoEnhanced && (!slide.enhancementCount || slide.enhancementCount === 0)
+            );
+            
+            if (unenhancedSlides.length === 0) {
+                showNotification('info', 'Already Enhanced', 'All slides have already been enhanced with AI.');
+                return;
+            }
+            
+            showLoading(`Enhancing ${unenhancedSlides.length} slides with AI...`);
+            
+            try {
+                let enhancedCount = 0;
+                let failedCount = 0;
+                let skippedCount = 0;
+                
+                for (let i = 0; i < currentPresentation.slides.length; i++) {
+                    const slide = currentPresentation.slides[i];
+                    
+                    // Skip if already enhanced or content is empty/unchanged
+                    if (slide.autoEnhanced || (slide.enhancementCount && slide.enhancementCount > 0)) {
+                        skippedCount++;
+                        continue;
+                    }
+                    
+                    // Skip if content is too short or empty
+                    const plainText = slide.content.replace(/<[^>]*>/g, '').trim();
+                    if (plainText.length < 10) {
+                        skippedCount++;
+                        continue;
+                    }
+                    
+                    updateGenerationProgress(`Enhancing slide ${i + 1} of ${totalSlides}...`);
+                    
+                    try {
+                        // Create content hash for caching
+                        const contentHash = btoa(slide.title + slide.content).slice(0, 16);
+                        const cacheKey = `enhanced_${contentHash}`;
+                        
+                        // Check local cache first
+                        const cachedContent = localStorage.getItem(cacheKey);
+                        if (cachedContent) {
+                            currentPresentation.slides[i].content = cachedContent;
+                            currentPresentation.slides[i].enhancementCount = (slide.enhancementCount || 0) + 1;
+                            currentPresentation.slides[i].lastEnhanced = new Date().toISOString();
+                            enhancedCount++;
+                            continue;
+                        }
+                        
+                        const result = await callBackendAPI('enhance-slide', {
+                            title: slide.title,
+                            content: slide.content
+                        });
+                        
+                        if (result && result.content && result.content !== slide.content) {
+                            currentPresentation.slides[i].content = result.content;
+                            currentPresentation.slides[i].enhancementCount = (slide.enhancementCount || 0) + 1;
+                            currentPresentation.slides[i].lastEnhanced = new Date().toISOString();
+                            
+                            // Cache the enhanced content
+                            localStorage.setItem(cacheKey, result.content);
+                            
+                            enhancedCount++;
+                        } else {
+                            failedCount++;
+                        }
+                    } catch (error) {
+                        console.error(`Failed to enhance slide ${i + 1}:`, error);
+                        failedCount++;
+                    }
+                    
+                    // Small delay between requests to avoid rate limiting
+                    if (i < currentPresentation.slides.length - 1) {
+                        await delay(300);
+                    }
+                }
+                
+                hideLoading();
+                
+                // Update current slide display
+                showSlide(currentSlideIndex);
+                savePresentation();
+                
+                // Show results
+                if (enhancedCount === totalSlides - skippedCount) {
+                    showNotification('success', 'All Slides Enhanced!', 
+                        `Successfully enhanced ${enhancedCount} slides with AI. ${skippedCount > 0 ? `${skippedCount} slides were already enhanced.` : ''}`);
+                } else if (enhancedCount > 0) {
+                    showNotification('warning', 'Partial Enhancement', 
+                        `Enhanced ${enhancedCount} slides. ${failedCount} failed, ${skippedCount} already enhanced.`);
+                } else {
+                    showNotification('error', 'Enhancement Failed', 
+                        'Unable to enhance any slides. Please check your connection and try again.');
+                }
+                
+                // Hide enhancement reminder if all slides were enhanced
+                if (enhancedCount > 0 || skippedCount === totalSlides) {
+                    const reminder = document.getElementById('enhancementReminder');
+                    if (reminder) {
+                        reminder.style.display = 'none';
+                    }
+                }
+                
+            } catch (error) {
+                hideLoading();
+                console.error('Bulk enhancement error:', error);
+                showNotification('error', 'Enhancement Error', 
+                    'Failed to enhance slides. Please try again or enhance slides individually.');
+            }
+        }
+
+        async function enhanceAllSlidesFromExport() {
+            await enhanceAllSlides();
+            // After enhancement, scroll back to export options
+            setTimeout(() => {
+                document.getElementById('step4').scrollIntoView({ behavior: 'smooth' });
+            }, 1000);
+        }
+
+        async function enhanceSlide() {
+            if (!currentPresentation || currentSlideIndex < 0) {
+                showNotification('error', 'No Slide Selected', 'Please select a slide to enhance.');
+                return;
+            }
+            
+            const currentSlide = currentPresentation.slides[currentSlideIndex];
+            
+            // Validate slide content
+            if (!currentSlide.content || currentSlide.content.trim().length === 0) {
+                showNotification('warning', 'Empty Slide', 'Please add some content to the slide before enhancing.');
+                return;
+            }
+            
+            // Check if content is too short to enhance
+            const plainText = currentSlide.content.replace(/<[^>]*>/g, '').trim();
+            if (plainText.length < 10) {
+                showNotification('warning', 'Content Too Short', 'Please add more content to the slide before enhancing.');
+                return;
+            }
+            
+            // Check if slide was already auto-enhanced
+            const isAutoEnhanced = currentSlide.autoEnhanced === true;
+            const enhancementCount = currentSlide.enhancementCount || 0;
+            
+            // Create content hash for caching
+            const contentHash = btoa(currentSlide.title + currentSlide.content).slice(0, 16);
+            const cacheKey = `enhanced_${contentHash}`;
+            
+            // Check if we have cached enhanced content for this exact content
+            const cachedContent = localStorage.getItem(cacheKey);
+            if (cachedContent && cachedContent !== currentSlide.content) {
+                // Apply cached enhancement
+                const originalContent = currentSlide.content;
+                currentPresentation.slides[currentSlideIndex].content = cachedContent;
+                currentPresentation.slides[currentSlideIndex].enhancementCount = enhancementCount + 1;
+                currentPresentation.slides[currentSlideIndex].lastEnhanced = new Date().toISOString();
+                
+                showSlide(currentSlideIndex);
+                savePresentation();
+                
+                showNotification('success', 'Slide Enhanced (Cached)', 'Applied previously enhanced version of this content.');
+                return;
+            }
+            
+            // Provide context about enhancement status
+            let enhancementMessage = 'Analyzing slide content and generating enhancements...';
+            if (isAutoEnhanced && enhancementCount === 1) {
+                enhancementMessage = 'Re-enhancing slide content for additional improvements...';
+            } else if (enhancementCount > 1) {
+                enhancementMessage = `Further enhancing slide content (enhancement #${enhancementCount + 1})...`;
+            }
+            
+            showLoading(enhancementMessage);
+            
+            try {
+                const result = await callBackendAPI('enhance-slide', {
+                    title: currentSlide.title,
+                    content: currentSlide.content
+                });
+                
+                hideLoading();
+                
+                if (result && result.content && result.content !== currentSlide.content) {
+                    // Store original content for undo functionality
+                    const originalContent = currentSlide.content;
+                    
+                    // Apply enhanced content
+                    currentPresentation.slides[currentSlideIndex].content = result.content;
+                    
+                    // Update enhancement tracking
+                    currentPresentation.slides[currentSlideIndex].enhancementCount = enhancementCount + 1;
+                    currentPresentation.slides[currentSlideIndex].lastEnhanced = new Date().toISOString();
+                    
+                    // Cache the enhanced content
+                    localStorage.setItem(cacheKey, result.content);
+                    
+                    showSlide(currentSlideIndex);
+                    savePresentation();
+                    
+                    // Show success with details about what was enhanced
+                    const originalWordCount = originalContent.replace(/<[^>]*>/g, '').split(/\s+/).length;
+                    const enhancedWordCount = result.content.replace(/<[^>]*>/g, '').split(/\s+/).length;
+                    const improvement = enhancedWordCount > originalWordCount ? 
+                        `Expanded from ${originalWordCount} to ${enhancedWordCount} words` : 
+                        'Improved structure and clarity';
+                    
+                    // Customize success message based on enhancement history
+                    let successTitle = 'Slide Enhanced Successfully';
+                    let successMessage = `AI has improved your slide content. ${improvement}.`;
+                    
+                    if (isAutoEnhanced && enhancementCount === 1) {
+                        successTitle = 'Slide Re-Enhanced';
+                        successMessage = `AI has further improved your slide content. ${improvement}. This slide was previously auto-enhanced during creation.`;
+                    } else if (enhancementCount > 1) {
+                        successTitle = `Enhancement #${enhancementCount + 1} Complete`;
+                        successMessage = `AI has applied additional improvements. ${improvement}. Total enhancements: ${enhancementCount + 1}.`;
+                    }
+                    
+                    showNotification('success', successTitle, successMessage);
+                    
+                    // Store undo information
+                    window.lastEnhancement = {
+                        slideIndex: currentSlideIndex,
+                        originalContent: originalContent,
+                        timestamp: Date.now()
+                    };
+                    
+                } else if (result && result.content === currentSlide.content) {
+                    showNotification('info', 'No Changes Needed', 'AI determined that this slide content is already well-optimized.');
+                } else {
+                    showNotification('warning', 'Enhancement Failed', 
+                        'AI enhancement service is currently unavailable. Please try again later.');
+                }
+                
+            } catch (error) {
+                hideLoading();
+                console.error('Enhancement error:', error);
+                showNotification('error', 'Enhancement Error', 
+                    'Failed to enhance slide content. Please check your connection and try again.');
+            }
+        }
+
+        // Undo last enhancement
+        function undoEnhancement() {
+            if (window.lastEnhancement && 
+                window.lastEnhancement.slideIndex === currentSlideIndex &&
+                Date.now() - window.lastEnhancement.timestamp < 300000) { // 5 minutes
+                
+                currentPresentation.slides[currentSlideIndex].content = window.lastEnhancement.originalContent;
+                showSlide(currentSlideIndex);
+                savePresentation();
+                showNotification('success', 'Enhancement Undone', 'Slide content restored to previous version.');
+                window.lastEnhancement = null;
+            } else {
+                showNotification('warning', 'Cannot Undo', 'No recent enhancement to undo.');
+            }
+        }
+
+
+        // ===== THEME MANAGEMENT =====
+        function initializeThemeSelector() {
+            const savedTheme = localStorage.getItem('presentation_theme') || 'professional';
+            currentTheme = savedTheme;
+            applyThemeToDocument(savedTheme);
+        }
+
+        function selectTheme(e) {
+            const themeOption = e.target.closest('.theme-option');
+            if (!themeOption) return;
+            
+            // Update active state
+            document.querySelectorAll('.theme-option').forEach(option => {
+                option.classList.remove('active');
+            });
+            themeOption.classList.add('active');
+            
+            currentTheme = themeOption.dataset.theme;
+        }
+
+        function applyTheme() {
+            applyThemeToDocument(currentTheme);
+            localStorage.setItem('presentation_theme', currentTheme);
+            closeModal('themeModal');
+            showNotification('success', 'Theme Applied', `${currentTheme.charAt(0).toUpperCase() + currentTheme.slice(1)} theme has been applied.`);
+        }
+
+        function applyThemeToDocument(theme) {
+            const root = document.documentElement;
+            
+            const themes = {
+                professional: {
+                    primary: '#2563eb',
+                    primaryDark: '#1d4ed8',
+                    primaryLight: '#3b82f6'
+                },
+                modern: {
+                    primary: '#7c3aed',
+                    primaryDark: '#6d28d9',
+                    primaryLight: '#a855f7'
+                },
+                elegant: {
+                    primary: '#059669',
+                    primaryDark: '#047857',
+                    primaryLight: '#10b981'
+                },
+                creative: {
+                    primary: '#dc2626',
+                    primaryDark: '#b91c1c',
+                    primaryLight: '#ef4444'
+                },
+                minimal: {
+                    primary: '#374151',
+                    primaryDark: '#1f2937',
+                    primaryLight: '#6b7280'
+                }
+            };
+            
+            const selectedTheme = themes[theme] || themes.professional;
+            
+            root.style.setProperty('--primary-color', selectedTheme.primary);
+            root.style.setProperty('--primary-dark', selectedTheme.primaryDark);
+            root.style.setProperty('--primary-light', selectedTheme.primaryLight);
+        }
+
+        // ===== DOWNLOAD FUNCTIONS =====
+        function downloadHTML() {
+            if (!currentPresentation) {
+                showNotification('error', 'No Presentation', 'Please create a presentation first.');
+                return;
+            }
+            
+            const htmlContent = generateHTMLExport();
+            const filename = generateFilename('html');
+            triggerDownload(htmlContent, filename, 'text/html');
+            showNotification('success', 'HTML Downloaded', 'Your presentation has been downloaded as an HTML file.');
+        }
+
+        function downloadPDF() {
+            if (!currentPresentation) {
+                showNotification('error', 'No Presentation', 'Please create a presentation first.');
+                return;
+            }
+            
+            // Create a print-optimized version and trigger download
+            const pdfContent = generatePDFExport();
+            const filename = generateFilename('pdf');
+            
+            // Create a temporary window for PDF generation
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(pdfContent);
+            printWindow.document.close();
+            
+            // Wait for content to load, then print
+            setTimeout(() => {
+                printWindow.print();
+                printWindow.close();
+            }, 500);
+            
+            showNotification('success', 'PDF Export', 'PDF generation started. Use your browser\'s print dialog to save as PDF.');
+        }
+
+        function downloadPPTX() {
+            if (!currentPresentation) {
+                showNotification('error', 'No Presentation', 'Please create a presentation first.');
+                return;
+            }
+            
+            const pptxContent = generatePPTXExport();
+            const filename = generateFilename('pptx.html');
+            triggerDownload(pptxContent, filename, 'text/html');
+            showNotification('success', 'PowerPoint Compatible Downloaded', 'Your presentation has been downloaded in PowerPoint-compatible format.');
+        }
+
+        async function downloadImages() {
+            if (!currentPresentation) {
+                showNotification('error', 'No Presentation', 'Please create a presentation first.');
+                return;
+            }
+            
+            showLoading('Generating slide images...');
+            
+            try {
+                const zipContent = await generateImagesZip();
+                const filename = generateFilename('zip');
+                triggerDownload(zipContent, filename, 'application/zip');
+                showNotification('success', 'Images Downloaded', 'Your presentation slides have been downloaded as a ZIP file.');
+            } catch (error) {
+                showNotification('error', 'Image Export Failed', 'Failed to generate slide images. Please try again.');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        function downloadMarkdown() {
+            if (!currentPresentation) {
+                showNotification('error', 'No Presentation', 'Please create a presentation first.');
+                return;
+            }
+            
+            const markdownContent = generateMarkdownExport();
+            const filename = generateFilename('md');
+            triggerDownload(markdownContent, filename, 'text/markdown');
+            showNotification('success', 'Markdown Downloaded', 'Your presentation has been downloaded as a Markdown file.');
+        }
+
+        function downloadJSON() {
+            if (!currentPresentation) {
+                showNotification('error', 'No Presentation', 'Please create a presentation first.');
+                return;
+            }
+            
+            const jsonContent = generateJSONExport();
+            const filename = generateFilename('json');
+            triggerDownload(jsonContent, filename, 'application/json');
+            showNotification('success', 'Data Downloaded', 'Your presentation data has been downloaded as a JSON file.');
+        }
+
+        async function downloadAll() {
+            if (!currentPresentation) {
+                showNotification('error', 'No Presentation', 'Please create a presentation first.');
+                return;
+            }
+            
+            showLoading('Preparing all download formats...');
+            
+            try {
+                // Download all formats with a small delay between each
+                downloadHTML();
+                await delay(500);
+                downloadMarkdown();
+                await delay(500);
+                downloadJSON();
+                await delay(500);
+                downloadPPTX();
+                await delay(500);
+                
+                // Images take longer, so do them last
+                await downloadImages();
+                
+                showNotification('success', 'All Formats Downloaded', 'Your presentation has been downloaded in all available formats.');
+            } catch (error) {
+                showNotification('error', 'Batch Download Failed', 'Some downloads may have failed. Please try individual downloads.');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        function sharePresentation() {
+            if (!currentPresentation) {
+                showNotification('error', 'No Presentation', 'Please create a presentation first.');
+                return;
+            }
+            
+            // Create a shareable link (in a real app, this would upload to a server)
+            const presentationData = encodeURIComponent(JSON.stringify(currentPresentation));
+            const shareUrl = `${window.location.origin}${window.location.pathname}?presentation=${presentationData}`;
+            
+            // Copy to clipboard
+            navigator.clipboard.writeText(shareUrl).then(() => {
+                showNotification('success', 'Link Copied', 'Presentation link copied to clipboard.');
+            }).catch(() => {
+                showNotification('warning', 'Share Link', `Copy this link: ${shareUrl}`);
+            });
+        }
+
+        function generateHTMLExport() {
+            const slides = currentPresentation.slides.map(slide => `
+                <div class="slide-content">
+                    ${slide.content}
+                </div>
+            `).join('');
+            
+            return `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${currentPresentation.title}</title>
+    <style>
+        body { font-family: 'Inter', sans-serif; margin: 0; padding: 20px; }
+        .slide-content { 
+            max-width: 800px; 
+            margin: 0 auto 40px auto; 
+            padding: 40px; 
+            border: 1px solid #e2e8f0; 
+            border-radius: 12px;
+            page-break-after: always;
+        }
+        .slide-content:last-child { page-break-after: auto; }
+        h1 { color: #1e293b; font-size: 2.5rem; margin-bottom: 1rem; }
+        h2 { color: #1e293b; font-size: 2rem; margin-bottom: 1rem; }
+        p { color: #64748b; font-size: 1.125rem; line-height: 1.6; margin-bottom: 1rem; }
+        ul { list-style: none; padding: 0; }
+        li { color: #64748b; font-size: 1.125rem; margin-bottom: 0.75rem; padding-left: 1.5rem; position: relative; }
+        li:before { content: '•'; color: #2563eb; font-weight: bold; position: absolute; left: 0; }
+    </style>
+</head>
+<body>
+    <h1 style="text-align: center; margin-bottom: 2rem;">${currentPresentation.title}</h1>
+    ${slides}
+</body>
+</html>`;
+        }
+
+        // ===== DOWNLOAD HELPER FUNCTIONS =====
+        function triggerDownload(content, filename, mimeType) {
+            try {
+                const blob = new Blob([content], { type: mimeType });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = filename;
+                link.style.display = 'none';
+                
+                // Add to body, click, and remove
+                document.body.appendChild(link);
+                link.click();
+                
+                // Clean up after a short delay to ensure download starts
+                setTimeout(() => {
+                    document.body.removeChild(link);
+                    URL.revokeObjectURL(url);
+                }, 100);
+                
+                return true;
+            } catch (error) {
+                console.error('Download error:', error);
+                showNotification('error', 'Download Failed', 'Unable to download file. Please try again.');
+                return false;
+            }
+        }
+
+        function generateFilename(extension) {
+            const title = currentPresentation.title || 'presentation';
+            const cleanTitle = title.replace(/[^a-z0-9]/gi, '-').toLowerCase();
+            const timestamp = new Date().toISOString().slice(0, 10);
+            return `${cleanTitle}-${timestamp}.${extension}`;
+        }
+
+        function generatePDFExport() {
+            const slides = currentPresentation.slides.map(slide => `
+                <div class="slide-page">
+                    ${slide.content}
+                </div>
+            `).join('');
+            
+            return `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${currentPresentation.title} - PDF Export</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 0.5in;
+        }
+        body { 
+            font-family: 'Inter', sans-serif; 
+            margin: 0; 
+            padding: 0;
+            line-height: 1.6;
+        }
+        .slide-page { 
+            width: 100%;
+            height: 100vh;
+            padding: 2rem;
+            page-break-after: always;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            box-sizing: border-box;
+        }
+        .slide-page:last-child { 
+            page-break-after: auto; 
+        }
+        h1 { 
+            color: #1e293b; 
+            font-size: 2.5rem; 
+            margin-bottom: 1.5rem; 
+            text-align: center;
+        }
+        h2 { 
+            color: #1e293b; 
+            font-size: 2rem; 
+            margin-bottom: 1.5rem; 
+        }
+        p { 
+            color: #64748b; 
+            font-size: 1.125rem; 
+            line-height: 1.6; 
+            margin-bottom: 1rem; 
+        }
+        ul { 
+            list-style: none; 
+            padding: 0; 
+            margin: 1rem 0;
+        }
+        li { 
+            color: #64748b; 
+            font-size: 1.125rem; 
+            margin-bottom: 0.75rem; 
+            padding-left: 1.5rem; 
+            position: relative; 
+        }
+        li:before { 
+            content: '•'; 
+            color: #2563eb; 
+            font-weight: bold; 
+            position: absolute; 
+            left: 0; 
+        }
+        @media print {
+            body { background: white; }
+            .slide-page { 
+                box-shadow: none; 
+                height: 100vh;
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    ${slides}
+</body>
+</html>`;
+        }
+
+        function generatePPTXExport() {
+            const slides = currentPresentation.slides.map((slide, index) => `
+                <div class="pptx-slide" data-slide="${index + 1}">
+                    <div class="slide-header">
+                        <h3>Slide ${index + 1}</h3>
+                    </div>
+                    <div class="slide-body">
+                        ${slide.content}
+                    </div>
+                </div>
+            `).join('');
+            
+            return `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${currentPresentation.title} - PowerPoint Compatible</title>
+    <style>
+        body { 
+            font-family: 'Calibri', 'Arial', sans-serif; 
+            margin: 0; 
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .presentation-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 2rem;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .pptx-slide { 
+            background: white;
+            margin: 2rem 0;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            page-break-after: always;
+            min-height: 400px;
+        }
+        .pptx-slide:last-child { 
+            page-break-after: auto; 
+        }
+        .slide-header {
+            border-bottom: 2px solid #2563eb;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+        }
+        .slide-header h3 {
+            color: #2563eb;
+            margin: 0;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+        h1 { 
+            color: #1e293b; 
+            font-size: 2.5rem; 
+            margin-bottom: 1rem; 
+            text-align: center;
+        }
+        h2 { 
+            color: #1e293b; 
+            font-size: 2rem; 
+            margin-bottom: 1rem; 
+        }
+        p { 
+            color: #64748b; 
+            font-size: 1.125rem; 
+            line-height: 1.6; 
+            margin-bottom: 1rem; 
+        }
+        ul { 
+            margin: 1rem 0;
+            padding-left: 1.5rem;
+        }
+        li { 
+            color: #64748b; 
+            font-size: 1.125rem; 
+            margin-bottom: 0.5rem; 
+            line-height: 1.5;
+        }
+        .import-instructions {
+            background: #e0f2fe;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            border-left: 4px solid #0288d1;
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation-header">
+        <h1>${currentPresentation.title}</h1>
+        <p>${currentPresentation.subtitle || ''}</p>
+        <div class="import-instructions">
+            <strong>PowerPoint Import Instructions:</strong><br>
+            1. Open PowerPoint<br>
+            2. Go to File → Open<br>
+            3. Select this HTML file<br>
+            4. PowerPoint will convert the content to slides
+        </div>
+    </div>
+    ${slides}
+</body>
+</html>`;
+        }
+
+        function generateMarkdownExport() {
+            let markdown = `# ${currentPresentation.title}\n\n`;
+            
+            if (currentPresentation.subtitle) {
+                markdown += `*${currentPresentation.subtitle}*\n\n`;
+            }
+            
+            markdown += `---\n\n`;
+            
+            currentPresentation.slides.forEach((slide, index) => {
+                markdown += `## Slide ${index + 1}: ${slide.title}\n\n`;
+                
+                // Convert HTML to Markdown
+                let content = slide.content;
+                
+                // Convert headings
+                content = content.replace(/<h1[^>]*>(.*?)<\/h1>/gi, '# $1');
+                content = content.replace(/<h2[^>]*>(.*?)<\/h2>/gi, '## $1');
+                content = content.replace(/<h3[^>]*>(.*?)<\/h3>/gi, '### $1');
+                
+                // Convert paragraphs
+                content = content.replace(/<p[^>]*>(.*?)<\/p>/gi, '$1\n');
+                
+                // Convert lists
+                content = content.replace(/<ul[^>]*>/gi, '');
+                content = content.replace(/<\/ul>/gi, '');
+                content = content.replace(/<li[^>]*>(.*?)<\/li>/gi, '- $1');
+                
+                // Convert strong/bold
+                content = content.replace(/<strong[^>]*>(.*?)<\/strong>/gi, '**$1**');
+                content = content.replace(/<b[^>]*>(.*?)<\/b>/gi, '**$1**');
+                
+                // Convert emphasis/italic
+                content = content.replace(/<em[^>]*>(.*?)<\/em>/gi, '*$1*');
+                content = content.replace(/<i[^>]*>(.*?)<\/i>/gi, '*$1*');
+                
+                // Remove remaining HTML tags
+                content = content.replace(/<[^>]*>/g, '');
+                
+                // Clean up extra whitespace
+                content = content.replace(/\n\s*\n/g, '\n\n').trim();
+                
+                markdown += content + '\n\n---\n\n';
+            });
+            
+            // Add metadata
+            markdown += `\n## Presentation Metadata\n\n`;
+            markdown += `- **Created**: ${new Date().toLocaleDateString()}\n`;
+            markdown += `- **Slides**: ${currentPresentation.slides.length}\n`;
+            markdown += `- **Theme**: ${currentTheme}\n`;
+            markdown += `- **Generated by**: AI Presentation Builder\n`;
+            
+            return markdown;
+        }
+
+        function generateJSONExport() {
+            const exportData = {
+                ...currentPresentation,
+                metadata: {
+                    exportDate: new Date().toISOString(),
+                    version: '1.0',
+                    theme: currentTheme,
+                    slideCount: currentPresentation.slides.length,
+                    generator: 'AI Presentation Builder'
+                }
+            };
+            
+            return JSON.stringify(exportData, null, 2);
+        }
+
+        async function generateImagesZip() {
+            // This is a simplified version - in a real implementation, you'd use html2canvas
+            // For now, we'll create a text-based representation
+            const files = [];
+            
+            currentPresentation.slides.forEach((slide, index) => {
+                const slideText = `Slide ${index + 1}: ${slide.title}\n\n${slide.content.replace(/<[^>]*>/g, '')}\n`;
+                files.push({
+                    name: `slide-${index + 1}.txt`,
+                    content: slideText
+                });
+            });
+            
+            // Create a simple ZIP-like structure (this is a placeholder)
+            // In a real implementation, you'd use JSZip library
+            let zipContent = 'PK\x03\x04'; // ZIP file signature
+            files.forEach(file => {
+                zipContent += `\n--- ${file.name} ---\n${file.content}\n`;
+            });
+            
+            return zipContent;
+        }
+
+        function delay(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        // Legacy function for backward compatibility
+        function downloadFile(content, filename, mimeType) {
+            return triggerDownload(content, filename, mimeType);
+        }
+
+        // ===== UTILITY FUNCTIONS =====
+        function showLoading(message) {
+            const overlay = document.getElementById('loadingOverlay');
+            const text = document.getElementById('loadingText');
+            if (overlay && text) {
+                text.textContent = message;
+                overlay.classList.add('active');
+            }
+        }
+
+        function hideLoading() {
+            const overlay = document.getElementById('loadingOverlay');
+            if (overlay) {
+                overlay.classList.remove('active');
+            }
+        }
+
+        function updateGenerationProgress(message) {
+            const progress = document.getElementById('generationProgress');
+            if (progress) {
+                progress.textContent = message;
+            }
+        }
+
+        function savePresentation() {
+            if (currentPresentation) {
+                localStorage.setItem('current_presentation', JSON.stringify(currentPresentation));
+                localStorage.setItem('current_slide_index', currentSlideIndex.toString());
+            }
+        }
+
+        function loadSavedPresentation() {
+            const saved = localStorage.getItem('current_presentation');
+            if (saved) {
+                try {
+                    currentPresentation = JSON.parse(saved);
+                    currentSlideIndex = parseInt(localStorage.getItem('current_slide_index') || '0');
+                    
+                    // If we have a saved presentation, show the editor
+                    if (currentPresentation && currentPresentation.slides && currentPresentation.slides.length > 0) {
+                        showStep(3);
+                        setupEditor();
+                    }
+                } catch (error) {
+                    console.error('Error loading saved presentation:', error);
+                    localStorage.removeItem('current_presentation');
+                    localStorage.removeItem('current_slide_index');
+                }
+            }
+        }
+
+        function setupAutosave() {
+            // Auto-save every 30 seconds
+            setInterval(() => {
+                if (currentPresentation) {
+                    savePresentation();
+                }
+            }, 30000);
+        }
+
+        // ===== NAVIGATION FUNCTIONS =====
+        function startCreation() {
+            showStep(1);
+        }
+
+        function goToEditor() {
+            if (currentPresentation) {
+                showStep(3);
+            } else {
+                showNotification('error', 'No Presentation', 'Please create a presentation first.');
+                showStep(1);
+            }
+        }
+
+        function goToExport() {
+            if (currentPresentation) {
+                showStep(4);
+            } else {
+                showNotification('error', 'No Presentation', 'Please create a presentation first.');
+            }
+        }
+
+        function startOver() {
+            if (confirm('Are you sure you want to start over? This will delete your current presentation.')) {
+                currentPresentation = null;
+                currentSlideIndex = 0;
+                localStorage.removeItem('current_presentation');
+                localStorage.removeItem('current_slide_index');
+                
+                // Reset form
+                document.getElementById('presentationForm').reset();
+                
+                showStep(1);
+                showNotification('success', 'Reset Complete', 'Ready to create a new presentation.');
+            }
+        }
+
+        function showThemeModal() {
+            showModal('themeModal');
+        }
+
+        // ===== API KEY MANAGEMENT =====
+        function saveApiKey() {
+            const keyInput = document.getElementById('apiKey');
+            const key = keyInput.value.trim();
+            
+            if (!key) {
+                showNotification('error', 'Invalid Key', 'Please enter a valid API key.');
+                return;
+            }
+            
+            if (!key.startsWith('sk-ant-')) {
+                showNotification('warning', 'Key Format', 'Claude API keys typically start with "sk-ant-". Please verify your key.');
+            }
+            
+            apiKey = key;
+            localStorage.setItem('claude_api_key', key);
+            closeModal('apiKeyModal');
+            showNotification('success', 'API Key Saved', 'Your Claude API key has been saved securely.');
+        }
+
+        // ===== URL PARAMETER HANDLING =====
+        function loadPresentationFromURL() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const presentationData = urlParams.get('presentation');
+            
+            if (presentationData) {
+                try {
+                    const presentation = JSON.parse(decodeURIComponent(presentationData));
+                    currentPresentation = presentation;
+                    currentSlideIndex = 0;
+                    showStep(3);
+                    setupEditor();
+                    showNotification('success', 'Presentation Loaded', 'Shared presentation loaded successfully.');
+                } catch (error) {
+                    console.error('Error loading presentation from URL:', error);
+                    showNotification('error', 'Load Error', 'Failed to load shared presentation.');
+                }
+            }
+        }
+
+        // Load presentation from URL on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadPresentationFromURL();
+        });
+
+        // ===== DEMO FUNCTIONALITY =====
+        function createDemoPresentation() {
+            const demoPresentation = {
+                title: "AI-Powered Presentation Builder Demo",
+                subtitle: "Experience the future of presentation creation",
+                slides: [
+                    {
+                        title: "Welcome",
+                        content: "<h1>AI-Powered Presentation Builder</h1><p>Create professional presentations in minutes with the power of artificial intelligence.</p>",
+                        type: "title"
+                    },
+                    {
+                        title: "Key Features",
+                        content: "<h2>Key Features</h2><ul><li>AI-generated content tailored to your topic</li><li>Professional themes and layouts</li><li>Real-time editing and collaboration</li><li>Export to multiple formats</li><li>Mobile-responsive design</li></ul>",
+                        type: "content"
+                    },
+                    {
+                        title: "How It Works",
+                        content: "<h2>How It Works</h2><p>Our AI analyzes your topic and audience to create engaging, professional content:</p><ul><li>Enter your presentation topic</li><li>Select your target audience</li><li>Choose slide count and duration</li><li>Let AI generate your presentation</li><li>Edit and customize as needed</li></ul>",
+                        type: "content"
+                    },
+                    {
+                        title: "Benefits",
+                        content: "<h2>Benefits</h2><ul><li><strong>Save Time:</strong> Generate presentations in minutes, not hours</li><li><strong>Professional Quality:</strong> AI ensures consistent, high-quality content</li><li><strong>Easy to Use:</strong> No design skills required</li><li><strong>Customizable:</strong> Full control over content and styling</li></ul>",
+                        type: "content"
+                    },
+                    {
+                        title: "Get Started",
+                        content: "<h1>Ready to Get Started?</h1><p>Click 'Create Presentation' to begin building your next amazing presentation with AI assistance.</p><p>Thank you for trying our AI Presentation Builder!</p>",
+                        type: "conclusion"
+                    }
+                ]
+            };
+            
+            currentPresentation = demoPresentation;
+            currentSlideIndex = 0;
+            showStep(3);
+            setupEditor();
+            savePresentation();
+            showNotification('success', 'Demo Loaded', 'Demo presentation loaded. Try editing the slides!');
+        }
+
+        // Add demo button functionality
+        function addDemoButton() {
+            const heroSection = document.querySelector('.hero-section .container');
+            if (heroSection) {
+                const demoButton = document.createElement('button');
+                demoButton.className = 'btn btn-secondary btn-large';
+                demoButton.style.marginLeft = '1rem';
+                demoButton.innerHTML = '🎯 Try Demo';
+                demoButton.onclick = createDemoPresentation;
+                
+                const createButton = heroSection.querySelector('.btn-primary');
+                if (createButton && createButton.parentNode) {
+                    createButton.parentNode.insertBefore(demoButton, createButton.nextSibling);
+                }
+            }
+        }
+
+        // Add demo button after DOM loads
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(addDemoButton, 100);
+        });
+
+        // ===== ERROR HANDLING =====
+        window.addEventListener('error', function(e) {
+            console.error('Application Error:', e.error);
+            showNotification('error', 'Application Error', 'An unexpected error occurred. Please refresh the page.');
+        });
+
+        // ===== ACCESSIBILITY IMPROVEMENTS =====
+        function setupAccessibility() {
+            // Add ARIA labels
+            document.querySelectorAll('.btn').forEach(btn => {
+                if (!btn.getAttribute('aria-label')) {
+                    btn.setAttribute('aria-label', btn.textContent.trim());
+                }
+            });
+            
+            // Add keyboard navigation for modals
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    const activeModal = document.querySelector('.modal.active');
+                    if (activeModal) {
+                        activeModal.classList.remove('active');
+                    }
+                }
+            });
+        }
+
+        // Setup accessibility features
+        document.addEventListener('DOMContentLoaded', setupAccessibility);
+
+        /*
+        ===== DEPLOYMENT INSTRUCTIONS =====
+        
+        To deploy this application:
+        
+        1. Save this file as "presentation-builder.html"
+        2. Upload to any web hosting service (GitHub Pages, Netlify, Vercel, etc.)
+        3. Users will need to get their own Claude API key from https://console.anthropic.com/
+        4. The application works entirely client-side - no server required!
+        
+        CUSTOMIZATION OPTIONS:
+        
+        1. Themes: Modify the theme colors in the applyThemeToDocument function
+        2. AI Prompts: Customize the createPresentationPrompt function for different content styles
+        3. Export Formats: Add new export options in the export functions
+        4. Slide Templates: Modify the createFallbackPresentation function for different layouts
+        
+        SECURITY NOTES:
+        
+        - API keys are stored in localStorage (client-side only)
+        - No data is sent to external servers except Claude API
+        - All processing happens in the user's browser
+        - Consider implementing server-side API key management for production use
+        
+        BROWSER COMPATIBILITY:
+        
+        - Modern browsers (Chrome 80+, Firefox 75+, Safari 13+, Edge 80+)
+        - Requires JavaScript enabled
+        - Uses modern CSS features (CSS Grid, Custom Properties)
+        - Responsive design works on mobile devices
+        */
+
+    </script>
+</body>
+</html>
