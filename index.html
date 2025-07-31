@@ -1680,6 +1680,7 @@
         
         // Backend API configuration
         const API_BASE_URL = window.location.origin;
+        const FALLBACK_MODE = true; // Enable fallback mode for static deployment
 
         // ===== INITIALIZATION =====
         document.addEventListener('DOMContentLoaded', function() {
@@ -1751,6 +1752,12 @@
 
         // ===== BACKEND API INTEGRATION =====
         async function checkBackendHealth() {
+            if (FALLBACK_MODE) {
+                console.log('Running in fallback mode - using client-side generation');
+                showNotification('info', 'Client Mode', 'Running in client-side mode. Presentations will be generated locally.');
+                return;
+            }
+            
             try {
                 const response = await fetch(`${API_BASE_URL}/api/health`);
                 if (response.ok) {
@@ -1760,11 +1767,17 @@
                 }
             } catch (error) {
                 console.error('Backend health check failed:', error);
-                showNotification('warning', 'Backend Offline', 'Backend server is not available. Using demo mode.');
+                showNotification('info', 'Client Mode', 'Backend server is not available. Using client-side generation mode.');
             }
         }
 
         async function callBackendAPI(endpoint, data) {
+            // If fallback mode is enabled, use client-side generation
+            if (FALLBACK_MODE) {
+                console.log('Using fallback mode - generating presentation client-side');
+                return await generateClientSidePresentation(data);
+            }
+            
             try {
                 const response = await fetch(`${API_BASE_URL}/api/${endpoint}`, {
                     method: 'POST',
@@ -1782,9 +1795,115 @@
                 return await response.json();
             } catch (error) {
                 console.error('Backend API Error:', error);
-                showNotification('error', 'API Error', error.message || 'Failed to connect to backend API.');
-                return null;
+                console.log('Falling back to client-side generation');
+                return await generateClientSidePresentation(data);
             }
+        }
+
+        async function generateClientSidePresentation(formData) {
+            // Simulate API delay
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            
+            const presentation = {
+                title: `${formData.topic} - Professional Presentation`,
+                subtitle: `Tailored for ${formData.audience}`,
+                slides: []
+            };
+
+            const slideCount = parseInt(formData.slideCount);
+            
+            // Generate slides based on topic and audience
+            for (let i = 0; i < slideCount; i++) {
+                let slideTitle, slideContent;
+                
+                if (i === 0) {
+                    slideTitle = formData.topic;
+                    slideContent = `
+                        <h2>Welcome to ${formData.topic}</h2>
+                        <p>This presentation is designed for ${formData.audience}.</p>
+                        <ul>
+                            <li>Duration: ${formData.duration} minutes</li>
+                            <li>Total slides: ${slideCount}</li>
+                            <li>${formData.additionalInfo ? `Additional focus: ${formData.additionalInfo}` : 'Professional presentation format'}</li>
+                        </ul>
+                    `;
+                } else if (i === slideCount - 1) {
+                    slideTitle = "Conclusion & Next Steps";
+                    slideContent = `
+                        <h2>Key Takeaways</h2>
+                        <ul>
+                            <li>Summary of main points about ${formData.topic}</li>
+                            <li>Important insights for ${formData.audience}</li>
+                            <li>Action items and recommendations</li>
+                        </ul>
+                        <h3>Thank You</h3>
+                        <p>Questions and discussion welcome!</p>
+                    `;
+                } else {
+                    slideTitle = `Key Point ${i}`;
+                    slideContent = `
+                        <h2>${slideTitle}</h2>
+                        <p>Important information about ${formData.topic}.</p>
+                        <ul>
+                            <li>Supporting details and examples</li>
+                            <li>Relevant data and insights</li>
+                            <li>Practical applications for ${formData.audience}</li>
+                        </ul>
+                        <p>This slide focuses on essential aspects that matter to your audience.</p>
+                    `;
+                }
+                
+                presentation.slides.push({
+                    title: slideTitle,
+                    content: slideContent,
+                    type: i === 0 ? 'title' : i === slideCount - 1 ? 'conclusion' : 'content',
+                    autoEnhanced: false,
+                    enhancementCount: 0
+                });
+            }
+            
+            return presentation;
+        }
+
+        async function enhanceSlideClientSide(title, content) {
+            // Simulate API delay
+            await new Promise(resolve => setTimeout(resolve, 1500));
+            
+            // Simple client-side enhancement logic
+            let enhancedContent = content;
+            
+            // Add more structure and details
+            if (!content.includes('<h2>') && !content.includes('<h3>')) {
+                enhancedContent = content.replace(/<p>(.*?)<\/p>/g, (match, text) => {
+                    if (text.length > 50) {
+                        return `<h3>${text.substring(0, 30)}...</h3><p>${text}</p>`;
+                    }
+                    return match;
+                });
+            }
+            
+            // Add bullet points if not present
+            if (!content.includes('<ul>') && !content.includes('<li>')) {
+                const sentences = content.replace(/<[^>]*>/g, '').split(/[.!?]+/).filter(s => s.trim().length > 10);
+                if (sentences.length > 1) {
+                    const bulletPoints = sentences.slice(0, 3).map(sentence => 
+                        `<li>${sentence.trim()}</li>`
+                    ).join('');
+                    enhancedContent = enhancedContent.replace('</p>', `</p><ul>${bulletPoints}</ul>`);
+                }
+            }
+            
+            // Add a call-to-action if it's a conclusion slide
+            if (title.toLowerCase().includes('conclusion') || title.toLowerCase().includes('next steps')) {
+                if (!enhancedContent.includes('call') && !enhancedContent.includes('action')) {
+                    enhancedContent += '<p><strong>Call to Action:</strong> Consider implementing these strategies in your next project.</p>';
+                }
+            }
+            
+            return {
+                content: enhancedContent,
+                enhanced: true
+            };
         }
 
         // ===== PRESENTATION GENERATION =====
@@ -2286,10 +2405,15 @@
                             continue;
                         }
                         
-                        const result = await callBackendAPI('enhance-slide', {
-                            title: slide.title,
-                            content: slide.content
-                        });
+                        let result;
+                        if (FALLBACK_MODE) {
+                            result = await enhanceSlideClientSide(slide.title, slide.content);
+                        } else {
+                            result = await callBackendAPI('enhance-slide', {
+                                title: slide.title,
+                                content: slide.content
+                            });
+                        }
                         
                         if (result && result.content && result.content !== slide.content) {
                             currentPresentation.slides[i].content = result.content;
@@ -2412,10 +2536,15 @@
             showLoading(enhancementMessage);
             
             try {
-                const result = await callBackendAPI('enhance-slide', {
-                    title: currentSlide.title,
-                    content: currentSlide.content
-                });
+                let result;
+                if (FALLBACK_MODE) {
+                    result = await enhanceSlideClientSide(currentSlide.title, currentSlide.content);
+                } else {
+                    result = await callBackendAPI('enhance-slide', {
+                        title: currentSlide.title,
+                        content: currentSlide.content
+                    });
+                }
                 
                 hideLoading();
                 
