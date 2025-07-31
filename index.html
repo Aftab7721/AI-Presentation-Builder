@@ -554,26 +554,22 @@
 
         /* Custom scrollbar for slides section */
         .slides-section::-webkit-scrollbar {
-            width: 35px;
+            width: 8px;
         }
 
         .slides-section::-webkit-scrollbar-track {
             background: var(--gray-100);
-            border-radius: 12px;
-            border: 1px solid var(--gray-200);
+            border-radius: 4px;
         }
 
         .slides-section::-webkit-scrollbar-thumb {
             background: linear-gradient(180deg, var(--primary-color), var(--primary-light));
-            border-radius: 12px;
+            border-radius: 4px;
             transition: all 0.3s ease;
-            border: 2px solid var(--gray-200);
-            min-height: 120px;
         }
 
         .slides-section::-webkit-scrollbar-thumb:hover {
             background: linear-gradient(180deg, var(--primary-dark), var(--primary-color));
-            transform: scale(1.1);
         }
 
         /* Slide navigation controls */
@@ -1826,12 +1822,14 @@
                 if (i === 0) {
                     slideTitle = formData.topic;
                     slideContent = `
-                        <h2>Welcome to ${formData.topic}</h2>
-                        <p>This presentation is designed for ${formData.audience}.</p>
+                        <h1>${formData.topic}</h1>
+                        <h2>Professional Presentation</h2>
+                        <p>A comprehensive overview designed specifically for ${formData.audience}.</p>
                         <ul>
-                            <li>Duration: ${formData.duration} minutes</li>
-                            <li>Total slides: ${slideCount}</li>
-                            <li>${formData.additionalInfo ? `Additional focus: ${formData.additionalInfo}` : 'Professional presentation format'}</li>
+                            <li>Key insights and practical applications</li>
+                            <li>Industry best practices and strategies</li>
+                            <li>Real-world examples and case studies</li>
+                            <li>Actionable recommendations and next steps</li>
                         </ul>
                     `;
                 } else if (i === slideCount - 1) {
@@ -1850,13 +1848,14 @@
                     slideTitle = `Key Point ${i}`;
                     slideContent = `
                         <h2>${slideTitle}</h2>
-                        <p>Important information about ${formData.topic}.</p>
+                        <p>Essential insights and strategies for ${formData.topic}.</p>
                         <ul>
-                            <li>Supporting details and examples</li>
-                            <li>Relevant data and insights</li>
-                            <li>Practical applications for ${formData.audience}</li>
+                            <li>Core concepts and fundamental principles</li>
+                            <li>Advanced techniques and methodologies</li>
+                            <li>Industry trends and emerging practices</li>
+                            <li>Implementation strategies and success factors</li>
                         </ul>
-                        <p>This slide focuses on essential aspects that matter to your audience.</p>
+                        <p>This slide provides valuable knowledge and actionable insights for ${formData.audience}.</p>
                     `;
                 }
                 
