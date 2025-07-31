@@ -43,7 +43,7 @@ app.use(express.static('.'));
 
 // Serve the main application at root
 app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/presentation-builder.html');
+    res.sendFile(__dirname + '/index.html');
 });
 
 // OpenRouter AI configuration
@@ -113,26 +113,42 @@ async function callOpenRouterAPI(messages, maxTokens = 2000) {
 
 // Create optimized prompt for GPT-3.5-turbo
 function createPresentationPrompt(formData) {
-    return `Create a professional presentation about "${formData.topic}" for ${formData.audience} audience. 
-Requirements:
-- ${formData.slideCount} slides total
-- ${formData.duration}-minute presentation duration
-${formData.additionalInfo ? `- Additional: ${formData.additionalInfo}` : ''}
+    return `You are an expert presentation designer and content creator. Create a highly professional, engaging, and informative presentation about "${formData.topic}" specifically tailored for ${formData.audience} audience.
+
+CRITICAL REQUIREMENTS:
+- Create exactly ${formData.slideCount} slides
+- Design for ${formData.duration}-minute presentation duration
+${formData.additionalInfo ? `- Focus on: ${formData.additionalInfo}` : ''}
+- Make content highly relevant and valuable for the target audience
+- Include practical examples, actionable insights, and real-world applications
+- Use clear, professional language appropriate for the audience level
+- Structure content logically with smooth transitions between slides
+
+AUDIENCE-SPECIFIC GUIDELINES:
+- For Students: Include learning objectives, examples, and practical applications
+- For Professionals: Focus on industry insights, best practices, and ROI
+- For Executives: Emphasize strategic value, market trends, and business impact
+- For General Audience: Use accessible language with clear explanations
+
+CONTENT STRUCTURE:
+- Slide 1: Compelling title slide with clear value proposition
+- Middle slides: Deep dive into key aspects with examples and insights
+- Final slide: Strong conclusion with actionable takeaways
 
 Return ONLY valid JSON in this exact format:
 {
-  "title": "Presentation Title",
-  "subtitle": "Brief subtitle",
+  "title": "Compelling Presentation Title",
+  "subtitle": "Clear value proposition for the audience",
   "slides": [
     {
-      "title": "Slide Title",
-      "content": "HTML content with h1/h2/p/ul/li tags",
+      "title": "Engaging Slide Title",
+      "content": "Rich HTML content with h1/h2/h3/p/ul/li tags, including practical examples and insights",
       "type": "title|content|conclusion"
     }
   ]
 }
 
-Make content engaging and professional. First slide = title, last slide = conclusion.`;
+Make each slide content-rich, informative, and immediately valuable to the audience.`;
 }
 
 // Generate base presentation without enhancement
@@ -308,7 +324,7 @@ async function enhanceSlideContent(title, content) {
     const isPlain = !hasLists && !hasHeadings && plainText.length > 0;
     
     // Create context-aware enhancement prompt
-    let prompt = `You are an expert presentation consultant. Analyze and enhance this slide content:
+    let prompt = `You are an expert presentation consultant and content strategist. Analyze and significantly enhance this slide content to make it highly valuable and engaging:
 
 SLIDE TITLE: "${title}"
 CURRENT CONTENT: ${content}
@@ -355,15 +371,18 @@ ENHANCEMENT REQUIREMENTS:
     prompt += `
 
 SPECIFIC ENHANCEMENT RULES:
-1. Always use proper HTML structure (h1, h2, p, ul, li)
-2. Make bullet points specific and actionable
-3. Add concrete examples where relevant
-4. Use professional, engaging language
-5. Ensure content matches the slide title
-6. Keep formatting clean and readable
-7. If content is about benefits, add specific value propositions
-8. If content is about processes, add clear steps
-9. If content is about features, add practical applications
+1. Always use proper HTML structure (h1, h2, h3, p, ul, li)
+2. Make bullet points specific, actionable, and valuable
+3. Add concrete examples, case studies, or real-world applications
+4. Use professional, engaging language that resonates with the audience
+5. Ensure content directly supports and expands on the slide title
+6. Keep formatting clean, readable, and visually appealing
+7. If content is about benefits, add specific value propositions and ROI
+8. If content is about processes, add clear steps with best practices
+9. If content is about features, add practical applications and use cases
+10. Include industry insights, trends, or relevant statistics when appropriate
+11. Add call-to-action elements for conclusion slides
+12. Ensure each bullet point provides immediate value to the audience
 
 RETURN FORMAT: Return ONLY the enhanced HTML content, no explanations or additional text.
 
