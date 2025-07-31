@@ -568,12 +568,61 @@
             transition: all 0.3s ease;
         }
 
-        .slides-section::-webkit-scrollbar-thumb:hover {
+                .slides-section::-webkit-scrollbar-thumb:hover {
             background: linear-gradient(180deg, var(--primary-dark), var(--primary-color));
             transform: scale(1.05);
         }
 
+        /* Slide navigation controls */
+        .slide-navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-4);
+            padding: var(--spacing-3);
+            background: var(--white);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--gray-200);
+        }
 
+        .nav-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border: none;
+            border-radius: var(--radius-md);
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+            color: var(--white);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: var(--font-size-lg);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .nav-button:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-color));
+        }
+
+        .nav-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .slide-counter {
+            font-size: var(--font-size-sm);
+            font-weight: 600;
+            color: var(--gray-600);
+            background: var(--gray-100);
+            padding: var(--spacing-2) var(--spacing-3);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--gray-200);
+        }
 
         /* Enhanced slide thumbnails */
         .slide-thumbnail {
@@ -1333,20 +1382,7 @@
                         </select>
                     </div>
 
-                    <div class="form-group">
-                        <label for="duration" class="form-label">
-                            ⏱️ Presentation duration
-                        </label>
-                        <select id="duration" class="form-input form-select" required>
-                            <option value="">Select duration</option>
-                            <option value="5">5 minutes</option>
-                            <option value="10">10 minutes</option>
-                            <option value="15">15 minutes</option>
-                            <option value="30">30 minutes</option>
-                            <option value="45">45 minutes</option>
-                            <option value="60">1 hour</option>
-                        </select>
-                    </div>
+
 
                     <div class="form-group">
                         <label for="additionalInfo" class="form-label">
@@ -1413,11 +1449,22 @@
                             </h3>
                             
                             <!-- Help tooltip for new users -->
-                            <div class="slides-help" id="slidesHelp">
-                                Click on any slide to edit it. Use the arrows below to navigate between slides.
+                                                        <div class="slides-help" id="slidesHelp">
+                                Click on any slide to edit it. Use the navigation below to move between slides.
                             </div>
                             
-
+                            <!-- Slide navigation controls -->
+                            <div class="slide-navigation">
+                                <button class="nav-button" onclick="previousSlide()" id="prevButton" title="Previous Slide">
+                                    ◀
+                                </button>
+                                <div class="slide-counter" id="slideCounter">
+                                    Slide 1 of 1
+                                </div>
+                                <button class="nav-button" onclick="nextSlide()" id="nextButton" title="Next Slide">
+                                    ▶
+                                </button>
+                            </div>
                             
                             <div id="slideList">
                                 <!-- Slide thumbnails will be populated here -->
@@ -1685,13 +1732,7 @@
                 });
             }
             
-            // Duration dropdown
-            const durationSelect = document.getElementById('duration');
-            if (durationSelect) {
-                durationSelect.addEventListener('change', function() {
-                    console.log('Duration selected:', this.value);
-                });
-            }
+
         }
 
         // ===== BACKEND API INTEGRATION =====
@@ -2104,12 +2145,11 @@
                 topic: document.getElementById('topic').value,
                 audience: document.getElementById('audience').value,
                 slideCount: document.getElementById('slideCount').value,
-                duration: document.getElementById('duration').value,
                 additionalInfo: document.getElementById('additionalInfo').value
             };
             
             // Validate form
-            if (!formData.topic || !formData.audience || !formData.slideCount || !formData.duration) {
+            if (!formData.topic || !formData.audience || !formData.slideCount) {
                 showNotification('error', 'Form Incomplete', 'Please fill in all required fields.');
                 return;
             }
@@ -2183,11 +2223,27 @@
 
         function updateSlideList() {
             const slideList = document.getElementById('slideList');
+            const slideCounter = document.getElementById('slideCounter');
+            const prevButton = document.getElementById('prevButton');
+            const nextButton = document.getElementById('nextButton');
             const slidesHelp = document.getElementById('slidesHelp');
             
             if (!slideList || !currentPresentation) return;
             
             slideList.innerHTML = '';
+            
+            // Update slide counter
+            if (slideCounter) {
+                slideCounter.textContent = `Slide ${currentSlideIndex + 1} of ${currentPresentation.slides.length}`;
+            }
+            
+            // Update navigation buttons
+            if (prevButton) {
+                prevButton.disabled = currentSlideIndex === 0;
+            }
+            if (nextButton) {
+                nextButton.disabled = currentSlideIndex === currentPresentation.slides.length - 1;
+            }
             
             // Hide help tooltip after first interaction
             if (slidesHelp && currentPresentation.slides.length > 1) {
@@ -2278,9 +2334,55 @@
             savePresentation();
             
             showNotification('success', 'Slide Duplicated', 'Slide copied successfully.');
+                }
+
+        function previousSlide() {
+            if (currentSlideIndex > 0) {
+                showSlide(currentSlideIndex - 1);
+                showNotification('info', 'Navigation', `Moved to Slide ${currentSlideIndex + 1}`);
+            } else {
+                showNotification('warning', 'Navigation', 'You are already on the first slide');
+            }
         }
 
+        function nextSlide() {
+            if (currentSlideIndex < currentPresentation.slides.length - 1) {
+                showSlide(currentSlideIndex + 1);
+                showNotification('info', 'Navigation', `Moved to Slide ${currentSlideIndex + 1}`);
+            } else {
+                showNotification('warning', 'Navigation', 'You are already on the last slide');
+            }
+        }
 
+        // Add keyboard navigation support
+        document.addEventListener('keydown', function(event) {
+            if (document.getElementById('step3').classList.contains('hidden')) return;
+            
+            switch(event.key) {
+                case 'ArrowLeft':
+                    event.preventDefault();
+                    previousSlide();
+                    break;
+                case 'ArrowRight':
+                    event.preventDefault();
+                    nextSlide();
+                    break;
+                case 'Home':
+                    event.preventDefault();
+                    if (currentPresentation && currentPresentation.slides.length > 0) {
+                        showSlide(0);
+                        showNotification('info', 'Navigation', 'Moved to first slide');
+                    }
+                    break;
+                case 'End':
+                    event.preventDefault();
+                    if (currentPresentation && currentPresentation.slides.length > 0) {
+                        showSlide(currentPresentation.slides.length - 1);
+                        showNotification('info', 'Navigation', 'Moved to last slide');
+                    }
+                    break;
+            }
+        });
 
         // ===== AI ENHANCEMENT FUNCTIONS =====
         async function enhanceAllSlides() {
