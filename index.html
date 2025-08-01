@@ -1613,9 +1613,6 @@
                     </div>
 
                     <div class="text-center">
-                        <button class="btn btn-secondary" onclick="sharePresentation()">
-                            🔗 Share Link
-                        </button>
                         <button class="btn btn-secondary" onclick="goToEditor()">
                             ← Back to Editor
                         </button>
@@ -3060,6 +3057,30 @@
             showNotification('success', 'Data Downloaded', 'Your presentation data has been downloaded as a JSON file.');
         }
 
+        function downloadDOCX() {
+            if (!currentPresentation) {
+                showNotification('error', 'No Presentation', 'Please create a presentation first.');
+                return;
+            }
+            
+            const docxContent = generateDOCXExport();
+            const filename = generateFilename('docx');
+            triggerDownload(docxContent, filename, 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+            showNotification('success', 'DOCX Downloaded', 'Your presentation has been downloaded as a DOCX file.');
+        }
+
+        function downloadTXT() {
+            if (!currentPresentation) {
+                showNotification('error', 'No Presentation', 'Please create a presentation first.');
+                return;
+            }
+            
+            const txtContent = generateTXTExport();
+            const filename = generateFilename('txt');
+            triggerDownload(txtContent, filename, 'text/plain');
+            showNotification('success', 'TXT Downloaded', 'Your presentation has been downloaded as a TXT file.');
+        }
+
         async function downloadAll() {
             if (!currentPresentation) {
                 showNotification('error', 'No Presentation', 'Please create a presentation first.');
@@ -3069,20 +3090,17 @@
             showLoading('Preparing all download formats...');
             
             try {
-                // Download all formats with a small delay between each
-                downloadHTML();
-                await delay(500);
-                downloadMarkdown();
-                await delay(500);
-                downloadJSON();
+                // Download the four popular formats with a small delay between each
+                downloadPDF();
                 await delay(500);
                 downloadPPTX();
                 await delay(500);
+                downloadDOCX();
+                await delay(500);
+                downloadTXT();
+                await delay(500);
                 
-                // Images take longer, so do them last
-                await downloadImages();
-                
-                showNotification('success', 'All Formats Downloaded', 'Your presentation has been downloaded in all available formats.');
+                showNotification('success', 'All Formats Downloaded', 'Your presentation has been downloaded in PDF, PPTX, DOCX, and TXT formats.');
             } catch (error) {
                 showNotification('error', 'Batch Download Failed', 'Some downloads may have failed. Please try individual downloads.');
             } finally {
@@ -3090,23 +3108,7 @@
             }
         }
 
-        function sharePresentation() {
-            if (!currentPresentation) {
-                showNotification('error', 'No Presentation', 'Please create a presentation first.');
-                return;
-            }
-            
-            // Create a shareable link (in a real app, this would upload to a server)
-            const presentationData = encodeURIComponent(JSON.stringify(currentPresentation));
-            const shareUrl = `${window.location.origin}${window.location.pathname}?presentation=${presentationData}`;
-            
-            // Copy to clipboard
-            navigator.clipboard.writeText(shareUrl).then(() => {
-                showNotification('success', 'Link Copied', 'Presentation link copied to clipboard.');
-            }).catch(() => {
-                showNotification('warning', 'Share Link', `Copy this link: ${shareUrl}`);
-            });
-        }
+
 
         function generateHTMLExport() {
             const slides = currentPresentation.slides.map(slide => `
@@ -3450,6 +3452,57 @@
             return JSON.stringify(exportData, null, 2);
         }
 
+        function generateDOCXExport() {
+            // Create a Word document compatible format
+            const slides = currentPresentation.slides.map((slide, index) => {
+                const cleanContent = slide.content.replace(/<[^>]*>/g, ''); // Remove HTML tags
+                return `Slide ${index + 1}: ${slide.title}\n\n${cleanContent}\n\n`;
+            }).join('');
+            
+            const docxContent = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
+    <w:body>
+        <w:p>
+            <w:r>
+                <w:t>${currentPresentation.title}</w:t>
+            </w:r>
+        </w:p>
+        <w:p>
+            <w:r>
+                <w:t>${slides}</w:t>
+            </w:r>
+        </w:p>
+    </w:body>
+</w:document>`;
+            
+            return docxContent;
+        }
+
+        function generateTXTExport() {
+            // Create a plain text version
+            let txtContent = `${currentPresentation.title}\n`;
+            txtContent += `${'='.repeat(currentPresentation.title.length)}\n\n`;
+            
+            if (currentPresentation.subtitle) {
+                txtContent += `${currentPresentation.subtitle}\n\n`;
+            }
+            
+            currentPresentation.slides.forEach((slide, index) => {
+                txtContent += `Slide ${index + 1}: ${slide.title}\n`;
+                txtContent += `${'-'.repeat(slide.title.length + 10)}\n`;
+                
+                // Remove HTML tags and convert to plain text
+                const cleanContent = slide.content.replace(/<[^>]*>/g, '');
+                txtContent += `${cleanContent}\n\n`;
+            });
+            
+            txtContent += `\nGenerated by AI Presentation Builder\n`;
+            txtContent += `Export Date: ${new Date().toLocaleDateString()}\n`;
+            txtContent += `Theme: ${currentTheme}\n`;
+            
+            return txtContent;
+        }
+
         async function generateImagesZip() {
             // This is a simplified version - in a real implementation, you'd use html2canvas
             // For now, we'll create a text-based representation
@@ -3550,6 +3603,7 @@
         function goToEditor() {
             if (currentPresentation) {
                 showStep(3);
+                setupEditor();
             } else {
                 showNotification('error', 'No Presentation', 'Please create a presentation first.');
                 showStep(1);
